@@ -201,3 +201,8 @@ ${QEMU_BIN} \
         -uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`${_TITLE_POSTFIX} \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd`
+
+if [ ${TEST_NETWORK_INTERFACE} == "macvtap" ]; then
+  eval "exec ${UNIQ_DESCR}<>\&-"
+  `delete_macvtap ${UNIQ_DESCR}`
+fi
