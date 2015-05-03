@@ -108,17 +108,17 @@ network)
    BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
 
    TEST_NET_MAC_ADDRESS=`client_test_mac 1`
-   CLIENT_IFNAME=`client_test_ifname 1`$(client_mq_netdev_param)
    TEST_DEVICE_ID=""
    case ${TEST_NETWORK_INTERFACE} in
    tap)
-      TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=${CLIENT_IFNAME}"
-      TEST_DEVICE_ID=",id=${CLIENT_IFNAME}"
+      TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`$(client_mq_netdev_param)"
+      TEST_DEVICE_ID=",id=`client_test_ifname 1`"
       ;;
    macvtap)
       UNIQ_DESCR=$(( ${CLIENT_NUM} + ${UNIQUE_ID} ))
       TAP_ID=`enslave_test_iface_macvtap ${TEST_BR_NAME} ${UNIQ_DESCR} ${TEST_NET_MAC_ADDRESS}`
       eval "exec ${UNIQ_DESCR}<>${TAP_ID}"
+      # Attention:  ifname=, script=, downscript=, vnet_hdr=, helper=, queues=, fds=, and vhostfds= are invalid with fd=
       TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},fd=${UNIQ_DESCR}"
       ;;
    * )
@@ -127,7 +127,7 @@ network)
       ;;
    esac
    TEST_NET_DEVICES="${TAP_DEVICE}
-                     -device virtio-net-pci,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0${TEST_DEVICE_ID}"
+                     -device virtio-net-pci,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
    ;;
 bootstorage)
    BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
