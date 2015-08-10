@@ -96,10 +96,10 @@ prepare_test_image()
   { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f raw ${TEST_IMAGE_NAME} 20G; }
 }
 
-# This one is for clients activation only
-# Commented out by default
-#WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
-#                  -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},bus=pci.0,id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
+if ${CLIENT_WORLD_ACCESS}; then
+    WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
+                     -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},bus=pci.0,id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
+fi
 
 IDE_STORAGE_PAIR="-drive file=`image_name`,if=ide,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
 
