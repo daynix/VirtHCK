@@ -4,6 +4,7 @@
 ## Inspired by the whql_powershell kit by Mike Cao <vipmike007@gmail.com>
 ## Written by Igor Derzhavets <igord@daynix.com>
 ## Modified by Leonid Bloch <leonid@daynix.com>
+## Modified by Sameeh Jubran <sameeh@daynix.com>
 ##
 ## License:
 ## This program is free software; you can redistribute it and/or modify it
