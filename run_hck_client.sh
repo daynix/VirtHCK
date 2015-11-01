@@ -103,79 +103,100 @@ fi
 
 IDE_STORAGE_PAIR="-drive file=`image_name`,if=ide,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
 
-case $TEST_DEV_TYPE in
-network)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+if [ ! "$IS_PHYSICAL" ]; then    # in case of a virtual device
 
-   TEST_NET_MAC_ADDRESS=`client_test_mac 1`
-   TEST_DEVICE_ID=""
-   case ${TEST_NETWORK_INTERFACE} in
-   tap)
-      TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`$(client_mq_netdev_param)"
-      TEST_DEVICE_ID=",id=`client_test_ifname 1`"
-      ;;
-   macvtap)
-      UNIQ_DESCR=$(( ${CLIENT_NUM} + ${UNIQUE_ID} ))
-      TAP_ID=`enslave_test_iface_macvtap ${TEST_BR_NAME} ${UNIQ_DESCR} ${TEST_NET_MAC_ADDRESS}`
-      eval "exec ${UNIQ_DESCR}<>${TAP_ID}"
-      # Attention:  ifname=, script=, downscript=, vnet_hdr=, helper=, queues=, fds=, and vhostfds= are invalid with fd=
-      TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},fd=${UNIQ_DESCR}"
-      ;;
-   * )
-      echo NETWORK INTERFACE IS NOT IMPLEMENTED
-      exit 1
-      ;;
-   esac
-   TEST_NET_DEVICES="${TAP_DEVICE}
-                     -device virtio-net-pci,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
-   ;;
-bootstorage)
-   BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                      -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=vio_block"
-   ;;
-storage-blk)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                      -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=virtio_blk"
-   prepare_test_image
-   ;;
-storage-scsi)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                      -device virtio-scsi-pci,id=scsi,bus=pci.0,addr=0x5
-                      -device scsi-hd,drive=virtio_scsi"
-   prepare_test_image
-   ;;
-serial)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_SERIAL_DEVICES="-device virtio-serial-pci,id=virtio_serial_pci0,addr=0x07"
-   ;;
-balloon)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_BALLOON_DEVICE="-device virtio-balloon-pci,bus=pci.0,addr=0x8"
-   ;;
-rng)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_RNG_DEVICE="-device virtio-rng-pci,bus=pci.0,addr=0x9"
-   ;;
-usb)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-   TEST_STORAGE_PAIR="
-    -device usb-ehci,id=vhck_ehci
-    -drive if=none,id=usbdisk,serial=${CLIENT_NUM}000${UNIQUE_ID},file=${TEST_IMAGE_NAME}
-    -device usb-storage,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
+    case $TEST_DEV_TYPE in
+    network)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
 
-    prepare_test_image
-    ;;
-video)
-   BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-    ;;
+       TEST_NET_MAC_ADDRESS=`client_test_mac 1`
+       TEST_DEVICE_ID=""
+       case ${TEST_NETWORK_INTERFACE} in
+       tap)
+          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`$(client_mq_netdev_param)"
+          TEST_DEVICE_ID=",id=`client_test_ifname 1`"
+          ;;
+       macvtap)
+          UNIQ_DESCR=$(( ${CLIENT_NUM} + ${UNIQUE_ID} ))
+          TAP_ID=`enslave_test_iface_macvtap ${TEST_BR_NAME} ${UNIQ_DESCR} ${TEST_NET_MAC_ADDRESS}`
+          eval "exec ${UNIQ_DESCR}<>${TAP_ID}"
+          # Attention:  ifname=, script=, downscript=, vnet_hdr=, helper=, queues=, fds=, and vhostfds= are invalid with fd=
+          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},fd=${UNIQ_DESCR}"
+          ;;
+       * )
+          echo NETWORK INTERFACE IS NOT IMPLEMENTED
+          exit 1
+          ;;
+       esac
+       TEST_NET_DEVICES="${TAP_DEVICE}
+                         -device virtio-net-pci,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
+       ;;
+    bootstorage)
+       BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+                          -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=vio_block"
+       ;;
+    storage-blk)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+                          -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=virtio_blk"
+       prepare_test_image
+       ;;
+    storage-scsi)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+                          -device virtio-scsi-pci,id=scsi,bus=pci.0,addr=0x5
+                          -device scsi-hd,drive=virtio_scsi"
+       prepare_test_image
+       ;;
+    serial)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_SERIAL_DEVICES="-device virtio-serial-pci,id=virtio_serial_pci0,addr=0x07"
+       ;;
+    balloon)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_BALLOON_DEVICE="-device virtio-balloon-pci,bus=pci.0,addr=0x8"
+       ;;
+    rng)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_RNG_DEVICE="-device virtio-rng-pci,bus=pci.0,addr=0x9"
+       ;;
+    usb)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_STORAGE_PAIR="
+        -device usb-ehci,id=vhck_ehci
+        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}000${UNIQUE_ID},file=${TEST_IMAGE_NAME}
+        -device usb-storage,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
 
-  * )
-   echo "NOT IMPLEMENTED"
-   exit 1
-    ;;
-esac
+        prepare_test_image
+        ;;
+    video)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+        ;;
+
+      * )
+       echo "NOT IMPLEMENTED"
+       exit 1
+        ;;
+    esac
+
+else    # in case of physical device
+    case $TEST_DEV_TYPE in
+        network)
+            BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+           if [ $CLIENT_NUM -eq 1 ]; then
+               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT1_HOST_ADDRESS},bus=pci.0$(client_mq_device_param)"
+           fi
+           if [ $CLIENT_NUM -eq 2 ]; then
+               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT2_HOST_ADDRESS},bus=pci.0$(client_mq_device_param)"
+           fi
+        ;;
+
+        * )
+            echo "NOT IMPLEMENTED. Please note that physical device assignment is enabled."
+            exit 1
+        ;;
+    esac
+fi
 
 if [ ${SHARE_ON_HOST} != "false" ] && [ -e "${SHARE_ON_HOST}/USE_SHARE" ]; then
   FILE_TRANSFER_SETUP="-netdev user,id=filenet0,net=${SHARE_ON_HOST_NET}.0/24,dhcpstart=${SHARE_ON_HOST_NET}.${CLIENT_NUM}00,smb=${SHARE_ON_HOST},smbserver=${SHARE_ON_HOST_NET}.1,restrict=on \
