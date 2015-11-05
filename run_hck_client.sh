@@ -184,10 +184,10 @@ else    # in case of physical device
         network)
             BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
            if [ $CLIENT_NUM -eq 1 ]; then
-               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT1_HOST_ADDRESS},$(client_mq_device_param)"
+               TEST_NET_DEVICES="-device ${ASSIGNMENT},host=${CLIENT1_HOST_ADDRESS},$(client_mq_device_param)"
            fi
            if [ $CLIENT_NUM -eq 2 ]; then
-               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT2_HOST_ADDRESS},$(client_mq_device_param)"
+               TEST_NET_DEVICES="-device ${ASSIGNMENT},host=${CLIENT2_HOST_ADDRESS},$(client_mq_device_param)"
            fi
         ;;
 
