@@ -98,10 +98,10 @@ prepare_test_image()
 
 if ${CLIENT_WORLD_ACCESS}; then
     WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
-                     -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},bus=pci.0,id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
+                     -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
 fi
 
-IDE_STORAGE_PAIR="-drive file=`image_name`,if=ide,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
+IDE_STORAGE_PAIR="-drive file=`image_name`,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
 
 if [ ! "$IS_PHYSICAL" ]; then    # in case of a virtual device
 
@@ -184,10 +184,10 @@ else    # in case of physical device
         network)
             BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
            if [ $CLIENT_NUM -eq 1 ]; then
-               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT1_HOST_ADDRESS},bus=pci.0$(client_mq_device_param)"
+               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT1_HOST_ADDRESS},$(client_mq_device_param)"
            fi
            if [ $CLIENT_NUM -eq 2 ]; then
-               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT2_HOST_ADDRESS},bus=pci.0$(client_mq_device_param)"
+               TEST_NET_DEVICES="-device pci-assign,host=${CLIENT2_HOST_ADDRESS},$(client_mq_device_param)"
            fi
         ;;
 
@@ -216,6 +216,7 @@ ${QEMU_BIN} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_RNG_DEVICE} \
         ${WORLD_NET_IFACE} \
+        -machine ${MACHINE_TYPE} \
         -m ${CLIENT_MEMORY} -smp `client_cpus`,cores=`client_cpus` -enable-kvm -cpu qemu64,+x2apic,+fsgsbase,model=13${ENLIGHTENMENTS_OPTION} -usbdevice tablet -boot d \
         -M pc -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global PIIX4_PM.disable_s3=${S3_DISABLE_OPTION} -global PIIX4_PM.disable_s4=${S4_DISABLE_OPTION} \
