@@ -38,12 +38,13 @@ machines to be tested.
 
 *Setting these in-script parameters is mandatory!*
 
-The script has 3 optional command line parameters, and it should be run this way:
-`.\auto_HCK.ps1 [-controller ControllerName] [-auto] [-manual]`
+The script has 4 optional command line parameters, and it should be run this way:
+`.\auto_HCK.ps1 [-controller ControllerName] [-auto] [-manual] [-filters]`
 The parameters in the square brackets are optional, and should be used for:
 * `-controller <name>` – to specify the network name of the HCK controller. If this parameter is absent, the script will try to use the computer it runs on as the controller.
 * `-auto` – run only the tests that do not require manual intervention.
 * `-manual` – run only the tests that require manual intervention.
+* `-filters` – auto update filters. For more info on filters: https://msdn.microsoft.com/en-us/library/windows/hardware/dn939962(v=vs.85).aspx.
 
 Note that:
 * If `-auto` and `-manual` are both present, or both absent, all the available tests will run.
