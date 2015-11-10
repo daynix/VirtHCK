@@ -22,7 +22,8 @@
 param(
     [string]$controller = $env:computername,
     [switch]$auto,
-    [switch]$manual
+    [switch]$manual,
+    [switch]$filters
 )
 
 $ObjModel              = [Reflection.Assembly]::LoadFrom($env:WTTSTDIO + "microsoft.windows.Kits.Hardware.objectmodel.dll")
@@ -38,7 +39,7 @@ if ([IntPtr]::size -ne 8)
 
 Clear-Host
 Write-Host
-Write-Host "Usage: C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -file auto_HCK.ps1 [-controller ControllerInstanceNetworkName] [-auto] [-manual]"
+Write-Host "Usage: C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -file auto_HCK.ps1 [-controller ControllerInstanceNetworkName] [-auto] [-manual] [-filters]"
 Write-Host
 
 ############# Basic settings ################
@@ -53,6 +54,41 @@ $TestMachineTwo = "CL2-REPLACE"
 
 # Get time
 $StartTime = Get-Date -Format yyyy_MM_dd_HH-mm-ss
+
+# Update filters
+if($filters)
+{
+    echo off
+    Write-Host Updating HLK Filters...
+    Write-Host Please make sure that all instances of the Studio are turned OFF!
+    pause
+    Write-Host Downloading HLK Filters...
+    bitsadmin /transfer "Downloading HLK Filters" "https://sysdev.microsoft.com/member/SubmissionWizard/LegalExemptions/HCKFilterUpdates.cab" "C:\HLKFilterUpdates.cab"
+    if (!$?)
+    {
+        Write-Host $error[0].Exception
+    }
+    Write-Host Extracting...
+    $TrimmedPath=$env:DTMBIN.Substring(0,$env:DTMBIN.Length-1)
+    expand -i "C:\HLKFilterUpdates.cab" -f:UpdateFilters.sql $TrimmedPath
+    if (!$?)
+    {
+        Write-Host $error[0].Exception
+    }   
+    Write-Host Installing...
+    pushd $env:DTMBIN
+    if (!$?)
+    {
+        Write-Host $error[0].Exception
+    }
+    $ExePath="$env:DTMBIN"+"updatefilters.exe"
+    & $ExePath
+    if (!$?)
+    {
+        Write-Host $error[0].Exception
+    }
+    popd
+}
 
 # Notify if this machine is the controller
 $ControllerName = $controller
