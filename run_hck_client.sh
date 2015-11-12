@@ -103,7 +103,7 @@ fi
 
 IDE_STORAGE_PAIR="-drive file=`image_name`,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
 
-if [ ! "$IS_PHYSICAL" ]; then    # in case of a virtual device
+if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
 
     case $TEST_DEV_TYPE in
     network)
@@ -224,7 +224,7 @@ ${QEMU_BIN} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`${_TITLE_POSTFIX} \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd`
 
-if [ ${TEST_NETWORK_INTERFACE} == "macvtap" ]; then
+if [ ${TEST_NETWORK_INTERFACE} = "macvtap" ]; then
   eval "exec ${UNIQ_DESCR}<>\&-"
   `delete_macvtap ${UNIQ_DESCR}`
 fi
