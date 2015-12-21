@@ -129,43 +129,43 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
           ;;
        esac
        TEST_NET_DEVICES="${TAP_DEVICE}
-                         -device virtio-net-pci,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
+                         -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
        ;;
     bootstorage)
        BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=vio_block"
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x5,drive=vio_block"
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device virtio-blk-pci,bus=pci.0,addr=0x5,drive=virtio_blk"
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x5,drive=virtio_blk"
        prepare_test_image
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device virtio-scsi-pci,id=scsi,bus=pci.0,addr=0x5
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},id=scsi,bus=pci.0,addr=0x5
                           -device scsi-hd,drive=virtio_scsi"
        prepare_test_image
        ;;
     serial)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_SERIAL_DEVICES="-device virtio-serial-pci,id=virtio_serial_pci0,addr=0x07"
+       TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},id=virtio_serial_pci0,addr=0x07"
        ;;
     balloon)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_BALLOON_DEVICE="-device virtio-balloon-pci,bus=pci.0,addr=0x8"
+       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x8"
        ;;
     rng)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_RNG_DEVICE="-device virtio-rng-pci,bus=pci.0,addr=0x9"
+       TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x9"
        ;;
     usb)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
         -device usb-ehci,id=vhck_ehci
         -drive if=none,id=usbdisk,serial=${CLIENT_NUM}000${UNIQUE_ID},file=${TEST_IMAGE_NAME}
-        -device usb-storage,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
+        -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
 
         prepare_test_image
         ;;
