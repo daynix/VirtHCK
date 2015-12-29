@@ -23,7 +23,8 @@ param(
     [string]$controller = $env:computername,
     [switch]$auto,
     [switch]$manual,
-    [switch]$filters
+    [switch]$filters,
+    [string]$playlist
 )
 
 $ObjModel              = [Reflection.Assembly]::LoadFrom($env:WTTSTDIO + "microsoft.windows.Kits.Hardware.objectmodel.dll")
@@ -39,7 +40,7 @@ if ([IntPtr]::size -ne 8)
 
 Clear-Host
 Write-Host
-Write-Host "Usage: C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -file auto_HCK.ps1 [-controller ControllerInstanceNetworkName] [-auto] [-manual] [-filters]"
+Write-Host "Usage: C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -file AutoHLK.ps1 [-controller ControllerInstanceNetworkName] [-auto] [-manual] [-filters] [-playlist PlaylistPath]"
 Write-Host
 
 ############# Basic settings ################
@@ -261,10 +262,20 @@ $ProductInstance.FindTargetFromDeviceFamily($DeviceFamily) | foreach {
     }
 }
 
+# Create tests list
+if (-Not [string]::IsNullOrEmpty($playlist))
+{
+    $PlaylistManager = new-object -typename Microsoft.Windows.Kits.Hardware.ObjectModel.PlaylistManager -Args $Project
+    $PlaylistObject = [Microsoft.Windows.Kits.Hardware.ObjectModel.PlaylistManager]::DeserializePlaylist($playlist)
+    $Tests = $PlaylistManager.GetTestsFromProjectThatMatchPlaylist($PlaylistObject)
+} else {
+    $Tests = $ProductInstance.GetTests()
+}
+
 # Add tests to queue
 write-host "Schedule tests ..."
 $RemainedAmountOfScheduledTests = 0
-$ProductInstance.GetTests() | foreach {
+$Tests | foreach {
     write-host $_.Name.ToString()"| Mode:"$_.TestType"| Config?"$_.RequiresSpecialConfiguration
     if (
         ## Name filtering (commented out by default - serves only as an example)
