@@ -75,7 +75,7 @@ if($filters)
     if (!$?)
     {
         Write-Host $error[0].Exception
-    }   
+    }
     Write-Host Installing...
     pushd $env:DTMBIN
     if (!$?)
