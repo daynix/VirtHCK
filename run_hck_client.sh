@@ -238,7 +238,7 @@ ${QEMU_BIN} \
         -m ${CLIENT_MEMORY} -smp `client_cpus`,cores=`client_cpus` -enable-kvm -cpu qemu64,+x2apic,+fsgsbase,model=13${ENLIGHTENMENTS_OPTION} -usbdevice tablet -boot d \
         -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
-        -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`${_TITLE_POSTFIX} \
+        -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd`
 
 if [ ${TEST_NETWORK_INTERFACE} = "macvtap" ]; then
