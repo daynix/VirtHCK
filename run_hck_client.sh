@@ -104,6 +104,35 @@ trace_cmd()
     fi
 }
 
+log_option()
+{
+    VAR_NAME=CLIENT${CLIENT_NUM}_LOG
+    eval echo \$${VAR_NAME}
+}
+
+log_file_name()
+{
+    if [ z`log_option` = zon ]
+    then
+        mkdir -p $LOGS_DIR/client${CLIENT_NUM} > /dev/null 2>&1
+        FILE_NAME=$LOGS_DIR/client${CLIENT_NUM}/`timestamp`-client${CLIENT_NUM}.log
+        echo `readlink -f $FILE_NAME`
+    fi
+}
+
+log_cmd()
+{
+    FILE_NAME=`log_file_name`
+
+    if [ ! -z  "${FILE_NAME}" ]
+    then
+        echo Logging output to ${FILE_NAME} 1>&2
+        echo "tee ${FILE_NAME}"
+    else
+        echo "cat"
+    fi
+}
+
 #Machine type related difference
 case $MACHINE_TYPE in
     q35 )
@@ -238,7 +267,7 @@ fi
 
 CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup.sh,downscript=no,ifname=`client_ctrl_ifname`
                  -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${BUS_NAME}.0,id=`client_ctrl_ifname`"
-
+                 
 ${QEMU_BIN} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
@@ -256,7 +285,8 @@ ${QEMU_BIN} \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd` \
-        `trace_cmd`
+        `trace_cmd` \
+         2>&1 | `log_cmd`
 
 if [ ${TEST_NETWORK_INTERFACE} = "macvtap" ]; then
   eval "exec ${UNIQ_DESCR}<>\&-"
