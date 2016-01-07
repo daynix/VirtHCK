@@ -70,9 +70,9 @@ extra_cmd()
   eval echo \$${VAR_NAME}
 }
 
-client_mq_netdev_param()
+netdev_queues_num()
 {
-  VAR_NAME=CLIENT${CLIENT_NUM}_MQ_NETDEV_PARAM
+  VAR_NAME=CLIENT${CLIENT_NUM}_NETDEV_QUEUES
   eval echo \$${VAR_NAME}
 }
 
@@ -130,7 +130,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        TEST_DEVICE_ID=""
        case ${TEST_NETWORK_INTERFACE} in
        tap)
-          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`$(client_mq_netdev_param)"
+          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`,queues=$(netdev_queues_num)"
           TEST_DEVICE_ID=",id=`client_test_ifname 1`"
           ;;
        macvtap)
