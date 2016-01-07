@@ -88,6 +88,22 @@ image_name()
   eval echo \$${VAR_NAME}
 }
 
+trace_file_name()
+{
+    VAR_NAME=CLIENT${CLIENT_NUM}_TRACE_EVENTS
+    eval echo \$${VAR_NAME}
+}
+
+trace_cmd()
+{
+    FILE_NAME=`trace_file_name`
+
+    if [ ! -z  "${FILE_NAME}" ]
+    then
+        echo "-trace events=${FILE_NAME}"
+    fi
+}
+
 #Machine type related difference
 case $MACHINE_TYPE in
     q35 )
@@ -239,7 +255,8 @@ ${QEMU_BIN} \
         -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
-        `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd`
+        `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd` \
+        `trace_cmd`
 
 if [ ${TEST_NETWORK_INTERFACE} = "macvtap" ]; then
   eval "exec ${UNIQ_DESCR}<>\&-"
