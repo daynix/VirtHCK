@@ -88,6 +88,23 @@ image_name()
   eval echo \$${VAR_NAME}
 }
 
+#Machine type related difference
+case $MACHINE_TYPE in
+    q35 )
+        BUS_NAME=pcie
+        DISABLE_S3_PARAM=ICH9-LPC.disable_s3
+        DISABLE_S4_PARAM=ICH9-LPC.disable_s4
+        #Windows 2012R2 crashes during boot on Q35 machine with UUID set
+        MACHINE_UUID=""
+        ;;
+    * )
+        BUS_NAME=pci
+        DISABLE_S3_PARAM=PIIX4_PM.disable_s3
+        DISABLE_S4_PARAM=PIIX4_PM.disable_s4
+        MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM}"
+        ;;
+esac
+
 TEST_IMAGE_NAME=$(dirname `image_name`)/client${CLIENT_NUM}_test_image.raw
 
 prepare_test_image()
@@ -129,22 +146,22 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
           ;;
        esac
        TEST_NET_DEVICES="${TAP_DEVICE}
-                         -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=pci.0$(client_mq_device_param)${TEST_DEVICE_ID}"
+                         -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=${BUS_NAME}.0$(client_mq_device_param)${TEST_DEVICE_ID}"
        ;;
     bootstorage)
        BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x5,drive=vio_block"
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=${BUS_NAME}.0,addr=0x5,drive=vio_block"
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x5,drive=virtio_blk"
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk"
        prepare_test_image
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},id=scsi,bus=pci.0,addr=0x5
+                          -device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},id=scsi,bus=${BUS_NAME}.0,addr=0x5
                           -device scsi-hd,drive=virtio_scsi"
        prepare_test_image
        ;;
@@ -154,11 +171,11 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     balloon)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x8"
+       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=${BUS_NAME}.0,addr=0x8"
        ;;
     rng)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=pci.0,addr=0x9"
+       TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}${TEST_DEV_EXTRA_PARAMS},bus=${BUS_NAME}.0,addr=0x9"
        ;;
     usb)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -204,7 +221,7 @@ if [ ${SHARE_ON_HOST} != "false" ] && [ -e "${SHARE_ON_HOST}/USE_SHARE" ]; then
 fi
 
 CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup.sh,downscript=no,ifname=`client_ctrl_ifname`
-                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=pci.0,id=`client_ctrl_ifname`"
+                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${BUS_NAME}.0,id=`client_ctrl_ifname`"
 
 ${QEMU_BIN} \
         ${BOOT_STORAGE_PAIR} \
@@ -216,11 +233,11 @@ ${QEMU_BIN} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_RNG_DEVICE} \
         ${WORLD_NET_IFACE} \
+        ${MACHINE_UUID} \
         -machine ${MACHINE_TYPE} \
         -m ${CLIENT_MEMORY} -smp `client_cpus`,cores=`client_cpus` -enable-kvm -cpu qemu64,+x2apic,+fsgsbase,model=13${ENLIGHTENMENTS_OPTION} -usbdevice tablet -boot d \
-        -M pc -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
-        -global PIIX4_PM.disable_s3=${S3_DISABLE_OPTION} -global PIIX4_PM.disable_s4=${S4_DISABLE_OPTION} \
-        -uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM} \
+        -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
+        -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`${_TITLE_POSTFIX} \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd`
 
