@@ -9,7 +9,7 @@ cl1Name='CL1-2012R2X64'
 cl2Name='CL2-2012R2X64'
 
 #Occasionally changed
-KitVersion='8.1'  # Important! Change if using a different version!
+KitVersion='8.1'  # Important! Change if using a different version! (Supported: 8, 8.1, 10)
 KitInstallDir='HCK_release' # Directory where the kit installation files are on the SMB share
 winPasswd='Adm1nPa$$word'
 SMBShareDir="${SCRIPTS_DIR}/../../SMB_SHARE"
@@ -29,6 +29,7 @@ ClientInstFile="${SCRIPTS_DIR}/CLIENT_INSTALL.bat"
 bgiFile="${SCRIPTS_DIR}/bg_display_data.bgi"
 
 ############### End of settings ###############
+###############################################
 
 # Naming issues
 WORD=$(echo | awk -v V="$KitVersion" '{if (V < 10) printf ("Certification"); else printf ("Lab");}')
@@ -76,15 +77,18 @@ cp "$bgiFile" "$SMBShareDir/${bgiFile##*/}"
 # Creating a run script for the studio
 cat > "$SMBShareDir/RunStudio.bat" <<'EOF'
 @echo off
-echo Disable external network...
+echo Disabling the external network...
+echo This may take a while - please be patient...
+
 netsh interface set interface "External" DISABLE
 
-echo Run HREPLACE-LETTERK studio...
+echo Starting HREPLACE-LETTERK studio...
+
 pushd "%WTTSTDIO%\"
 "%WTTSTDIO%\hreplace-letterkstudio.exe"
 popd
 
-echo Enable external network...
+echo Enabling the external network...
 netsh interface set interface "External" ENABLE
 EOF
 sed -i "s|REPLACE-LETTER|$LETTER|g" "$SMBShareDir/RunStudio.bat"
@@ -92,15 +96,19 @@ sed -i "s|replace-letter|${LETTER,,}|g" "$SMBShareDir/RunStudio.bat"
 # Creating an "Update Filters" script for the studio
 cat > "$SMBShareDir/UpdateFilters.bat" <<'EOF'
 @echo off
+
 echo Updating HREPLACE-LETTERK Filters...
 echo Please make sure that all instances of the Studio are turned OFF!
 pause
+
 echo Downloading HREPLACE-LETTERK Filters...
 bitsadmin /transfer "Downloading HREPLACE-LETTERK Filters" "REPLACE-FILTERS-URL" "C:\HREPLACE-LETTERKFilterUpdates.cab"
 if not errorlevel 0 echo ERROR & pause & exit /B 1
+
 echo Extracting...
 expand -i "C:\HREPLACE-LETTERKFilterUpdates.cab" -f:UpdateFilters.sql "%DTMBIN%\"
 if not errorlevel 0 echo ERROR & pause & exit /B 1
+
 echo Installing...
 pushd "%DTMBIN%\"
 if not errorlevel 0 echo ERROR & pause & exit /B 1

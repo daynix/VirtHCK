@@ -1,5 +1,5 @@
 @echo off
-echo Waiting 30s...
+echo Waiting 30 s to stabilize...
 
 timeout /t 30 /nobreak > NUL
 
@@ -33,7 +33,7 @@ echo Setting unidentified networks to Private Location...
 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" /v "Category" /t REG_DWORD /d "1" /f
 
-echo "Disabling Windows Update...
+echo Disabling Windows Update...
 
 sc config wuauserv start= disabled
 sc stop wuauserv
@@ -46,10 +46,10 @@ reg add "HKCU\Control Panel\Desktop" /v "SCRNSAVE.EXE" /t REG_SZ /d "" /f
 
 echo Disabling power saving options...
 
-powercfg.exe -change -monitor-timeout-ac 0
-powercfg.exe -change -disk-timeout-ac 0
-powercfg.exe -change -standby-timeout-ac 0
-powercfg.exe -change -hibernate-timeout-ac 0
+powercfg -change -monitor-timeout-ac 0
+powercfg -change -disk-timeout-ac 0
+powercfg -change -standby-timeout-ac 0
+powercfg -hibernate off
 
 echo Setting the informative wallpaper related material...
 
