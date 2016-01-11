@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 echo Waiting 30 s to stabilize...
 
 timeout /t 30 /nobreak > NUL
@@ -57,8 +58,43 @@ copy "\\REPLACE-SMB-ADDRESS\qemu\Bginfo.exe" "C:\"
 copy "\\REPLACE-SMB-ADDRESS\qemu\BGI-REPLACE" "C:\"
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "BgInfo" /t REG_SZ /d "C:\Bginfo.exe C:\BGI-REPLACE /TIMER:0 /NOLICPROMPT /SILENT" /f
 
-echo Setting additional parameters...
-
-copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-SETUP-AUX" "C:\"
-@powershell -ExecutionPolicy RemoteSigned -file "C:\REPLACE-SETUP-AUX"
-
+for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
+    set line=%%a
+    set line=!line:"=,!
+    for /f "delims=,,, tokens=1,3" %%b in ("!line!") do (
+        set name=%%b
+        set mac=%%c
+        if "!mac:~-2!"=="DD" (
+            netsh interface set interface name="!name!" newname="External"
+        )
+        if "!mac:~-2!"=="AA" (
+            netsh interface set interface name="!name!" newname="ShareConnect"
+        )
+        if "!mac!"=="56-CC-CC-FF-CC-CC" (
+            netsh interface ip set address name="!name!" static 192.168.100.1 255.255.255.0
+            netsh interface set interface name="!name!" newname="Control"
+            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CONTROLLER-INST-FILE" /f
+            copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CONTROLLER-INST-FILE" "C:\"
+            copy "\\REPLACE-SMB-ADDRESS\qemu\RunStudio.bat" "C:\Users\Administrator\Desktop\"
+            copy "\\REPLACE-SMB-ADDRESS\qemu\UpdateFilters.bat" "C:\Users\Administrator\Desktop\"
+            echo Will restart now...
+            netdom renamecomputer %computername% /NewName:HREPLACE-LETTERK-STUDIO /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+        )
+        if "!mac!"=="56-CC-CC-01-CC-CC" (
+            netsh interface ip set address name="!name!" static 192.168.100.2 255.255.255.0
+            netsh interface set interface name="!name!" newname="MessageDevice"
+            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+            copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CLIENT-INST-FILE" "C:\"
+            echo Will restart now...
+            netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+        )
+        if "!mac!"=="56-CC-CC-02-CC-CC" (
+            netsh interface ip set address name="!name!" static 192.168.100.3 255.255.255.0
+            netsh interface set interface name="!name!" newname="MessageDevice"
+            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+            copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CLIENT-INST-FILE" "C:\"
+            echo Will restart now...
+            netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+        )
+    )
+)

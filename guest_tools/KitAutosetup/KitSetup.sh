@@ -23,7 +23,6 @@ SHARE_ON_HOST_ADDR='192.168.101.1'
 
 #Don't change, unless REALLY needed!
 sysSetupFile="${SCRIPTS_DIR}/SYS_SETUP.bat"
-sysSetupAuxFile="${SCRIPTS_DIR}/SYS_SETUP_AUX.ps1"
 ControllerInstFile="${SCRIPTS_DIR}/CONTROLLER_INSTALL.bat"
 ClientInstFile="${SCRIPTS_DIR}/CLIENT_INSTALL.bat"
 bgiFile="${SCRIPTS_DIR}/bg_display_data.bgi"
@@ -52,18 +51,15 @@ then
 fi
 
 echo "Changing settings in setup scripts and copying them to $SMBShareDir ..."
-# Writing AUX file to share
-sed "s|CL1-REPLACE|$cl1Name|g" "$sysSetupAuxFile" > "$SMBShareDir/${sysSetupAuxFile##*/}"
-sed -i "s|CL2-REPLACE|$cl2Name|g" "$SMBShareDir/${sysSetupAuxFile##*/}"
-sed -i "s|REPLACE-SMB-ADDRESS|$SHARE_ON_HOST_ADDR|g" "$SMBShareDir/${sysSetupAuxFile##*/}"
-sed -i "s|REPLACE-CONTROLLER-INST-FILE|${ControllerInstFile##*/}|g" "$SMBShareDir/${sysSetupAuxFile##*/}"
-sed -i "s|REPLACE-CLIENT-INST-FILE|${ClientInstFile##*/}|g" "$SMBShareDir/${sysSetupAuxFile##*/}"
-sed -i "s|REPLACE-LETTER|$LETTER|g" "$SMBShareDir/${sysSetupAuxFile##*/}"
 # Writing setup file to share
 sed "s|PASSWORD-REPLACE|$winPasswd|g" "$sysSetupFile" > "$SMBShareDir/${sysSetupFile##*/}"
 sed -i "s|BGI-REPLACE|${bgiFile##*/}|g" "$SMBShareDir/${sysSetupFile##*/}"
 sed -i "s|REPLACE-SMB-ADDRESS|$SHARE_ON_HOST_ADDR|g" "$SMBShareDir/${sysSetupFile##*/}"
-sed -i "s|REPLACE-SETUP-AUX|${sysSetupAuxFile##*/}|g" "$SMBShareDir/${sysSetupFile##*/}"
+sed -i "s|CL1-REPLACE|$cl1Name|g"  "$SMBShareDir/${sysSetupFile##*/}"
+sed -i "s|CL2-REPLACE|$cl2Name|g" "$SMBShareDir/${sysSetupFile##*/}"
+sed -i "s|REPLACE-CONTROLLER-INST-FILE|${ControllerInstFile##*/}|g" "$SMBShareDir/${sysSetupFile##*/}"
+sed -i "s|REPLACE-CLIENT-INST-FILE|${ClientInstFile##*/}|g" "$SMBShareDir/${sysSetupFile##*/}"
+sed -i "s|REPLACE-LETTER|$LETTER|g" "$SMBShareDir/${sysSetupFile##*/}"
 # Writing Controller install file to share
 sed "s|REPLACE-SMB-ADDRESS|$SHARE_ON_HOST_ADDR|g" "$ControllerInstFile" > "$SMBShareDir/${ControllerInstFile##*/}"
 sed -i "s|REPLACE-INSTALL-DIR|${KitInstallDir}|g" "$SMBShareDir/${ControllerInstFile##*/}"
