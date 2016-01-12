@@ -71,48 +71,42 @@ sed -i "s|REPLACE-SUFFIX|$SUFFIX|g" "$SMBShareDir/${ClientInstFile##*/}"
 # Copying the BGI file to share
 cp "$bgiFile" "$SMBShareDir/${bgiFile##*/}"
 # Creating a run script for the studio
-cat > "$SMBShareDir/RunStudio.bat" <<'EOF'
-@echo off
-echo Disabling the external network...
-echo This may take a while - please be patient...
-
-netsh interface set interface "External" DISABLE
-
-echo Starting HREPLACE-LETTERK studio...
-
-pushd "%WTTSTDIO%\"
-"%WTTSTDIO%\hreplace-letterkstudio.exe"
-popd
-
-echo Enabling the external network...
-netsh interface set interface "External" ENABLE
-EOF
-sed -i "s|REPLACE-LETTER|$LETTER|g" "$SMBShareDir/RunStudio.bat"
-sed -i "s|replace-letter|${LETTER,,}|g" "$SMBShareDir/RunStudio.bat"
+printf "@echo off\r\n\
+echo Disabling the external network...\r\n\
+echo This may take a while - please be patient...\r\n\
+\r\n\
+netsh interface set interface \"External\" DISABLE\r\n\
+\r\n\
+echo Starting H%sK studio...\r\n\
+\r\n\
+pushd \"%%WTTSTDIO%%\\\"\r\n\
+\"%%WTTSTDIO%%\\h%skstudio.exe\"\r\n\
+popd\r\n\
+\r\n\
+echo Enabling the external network...\r\n\
+netsh interface set interface \"External\" \
+ENABLE\r\n" "$LETTER" "${LETTER,,}" > "$SMBShareDir/RunStudio.bat"
 # Creating an "Update Filters" script for the studio
-cat > "$SMBShareDir/UpdateFilters.bat" <<'EOF'
-@echo off
-
-echo Updating HREPLACE-LETTERK Filters...
-echo Please make sure that all instances of the Studio are turned OFF!
-pause
-
-echo Downloading HREPLACE-LETTERK Filters...
-bitsadmin /transfer "Downloading HREPLACE-LETTERK Filters" "REPLACE-FILTERS-URL" "C:\HREPLACE-LETTERKFilterUpdates.cab"
-if not errorlevel 0 echo ERROR & pause & exit /B 1
-
-echo Extracting...
-expand -i "C:\HREPLACE-LETTERKFilterUpdates.cab" -f:UpdateFilters.sql "%DTMBIN%\"
-if not errorlevel 0 echo ERROR & pause & exit /B 1
-
-echo Installing...
-pushd "%DTMBIN%\"
-if not errorlevel 0 echo ERROR & pause & exit /B 1
-"%DTMBIN%\updatefilters.exe"
-if not errorlevel 0 echo ERROR & pause & exit /B 1
-popd
-EOF
-sed -i "s|REPLACE-LETTER|$LETTER|g" "$SMBShareDir/UpdateFilters.bat"
-sed -i "s|REPLACE-FILTERS-URL|${filtersURL}|g" "$SMBShareDir/UpdateFilters.bat"
+printf "@echo off\r\n\
+\r\n\
+echo Updating H%sK Filters...\r\n\
+echo Please make sure that all instances of the Studio are turned OFF!\r\n\
+pause\r\n\
+\r\n\
+echo Downloading H%sK Filters...\r\n\
+bitsadmin /transfer \"Downloading H%sK Filters\" \"%s\" \"C:\\H%sKFilterUpdates.cab\"\r\n\
+if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
+\r\n\
+echo Extracting...\r\n\
+expand -i \"C:\\H%sKFilterUpdates.cab\" -f:UpdateFilters.sql \"%%DTMBIN%%\\\"\r\n\
+if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
+\r\n\
+echo Installing...\r\n\
+pushd \"%%DTMBIN%%\\\"\r\n\
+if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
+\"%%DTMBIN%%\\\\updatefilters.exe\"\r\n\
+if not errorlevel 0 echo ERROR & pause & exit /B 1\r\npopd\r\n" \
+$(printf "%0.s$LETTER " {1..3})"${filtersURL}" $(printf "%0.s$LETTER " {1..2})\
+> "$SMBShareDir/UpdateFilters.bat"
 # Placing a file in SMB_SHARE to make it available to clients
 touch "$SMBShareDir/USE_SHARE"
