@@ -73,28 +73,40 @@ for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
         if "!mac!"=="56-CC-CC-FF-CC-CC" (
             netsh interface ip set address name="!name!" static 192.168.100.1 255.255.255.0
             netsh interface set interface name="!name!" newname="Control"
-            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CONTROLLER-INST-FILE" /f
             copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CONTROLLER-INST-FILE" "C:\"
             copy "\\REPLACE-SMB-ADDRESS\qemu\RunStudio.bat" "C:\Users\Administrator\Desktop\"
             copy "\\REPLACE-SMB-ADDRESS\qemu\UpdateFilters.bat" "C:\Users\Administrator\Desktop\"
-            echo Will restart now...
-            netdom renamecomputer %computername% /NewName:HREPLACE-LETTERK-STUDIO /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+            if %computername%==HREPLACE-LETTERK-STUDIO (
+                "C:\REPLACE-CONTROLLER-INST-FILE"
+            ) else (
+                reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CONTROLLER-INST-FILE" /f
+                echo Will restart now...
+                netdom renamecomputer %computername% /NewName:HREPLACE-LETTERK-STUDIO /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+            )
         )
         if "!mac!"=="56-CC-CC-01-CC-CC" (
             netsh interface ip set address name="!name!" static 192.168.100.2 255.255.255.0
             netsh interface set interface name="!name!" newname="MessageDevice"
-            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
             copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CLIENT-INST-FILE" "C:\"
-            echo Will restart now...
-            netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+            if %computername%==CL1-REPLACE (
+                "C:\REPLACE-CLIENT-INST-FILE"
+            ) else (
+                reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+                echo Will restart now...
+                netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+            )
         )
         if "!mac!"=="56-CC-CC-02-CC-CC" (
             netsh interface ip set address name="!name!" static 192.168.100.3 255.255.255.0
             netsh interface set interface name="!name!" newname="MessageDevice"
-            reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
             copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CLIENT-INST-FILE" "C:\"
-            echo Will restart now...
-            netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:10
+            if %computername%==CL2-REPLACE (
+                "C:\REPLACE-CLIENT-INST-FILE"
+            ) else (
+                reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+                echo Will restart now...
+                netdom renamecomputer %computername% /NewName:"CL2-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+            )
         )
     )
 )
