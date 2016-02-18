@@ -4,7 +4,7 @@ SCRIPTS_DIR=`dirname $0`
 
 ################## Settings ###################
 
-#Frequwntly changed
+#Frequently changed
 cl1Name='CL1-2012R2X64'
 cl2Name='CL2-2012R2X64'
 
