@@ -64,6 +64,15 @@ monitor_cmd()
   eval echo \$${VAR_NAME}
 }
 
+usb_cmd()
+{
+    eval IMAGE_PATH=\$CLIENT${CLIENT_NUM}_USB_DEV
+    if [ ! -z ${IMAGE_PATH} ]
+    then
+        echo "-device piix3-usb-uhci -drive file=${IMAGE_PATH},if=none,id=usb${CLIENT_NUM} -device usb-storage,drive=usb${CLIENT_NUM}"
+    fi
+}
+
 extra_params_cmd()
 {
     if [ ! -z "${TEST_DEV_EXTRA_PARAMS}" ]
@@ -294,7 +303,7 @@ ${QEMU_BIN} \
         -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
-        `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `extra_cmd` \
+        `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `usb_cmd` `extra_cmd` \
         `trace_cmd` \
          2>&1 | `log_cmd`
 
