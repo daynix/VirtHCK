@@ -79,7 +79,7 @@ netsh interface set interface \"External\" DISABLE\r\n\
 \r\n\
 echo Starting H%sK studio...\r\n\
 \r\n\
-pushd \"%%WTTSTDIO%%\\\"\r\n\
+pushd \"%%WTTSTDIO%%\\\\\"\r\n\
 \"%%WTTSTDIO%%\\h%skstudio.exe\"\r\n\
 popd\r\n\
 \r\n\
@@ -98,11 +98,11 @@ bitsadmin /transfer \"Downloading H%sK Filters\" \"%s\" \"C:\\H%sKFilterUpdates.
 if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
 \r\n\
 echo Extracting...\r\n\
-expand -i \"C:\\H%sKFilterUpdates.cab\" -f:UpdateFilters.sql \"%%DTMBIN%%\\\"\r\n\
+expand -i \"C:\\H%sKFilterUpdates.cab\" -f:UpdateFilters.sql \"%%DTMBIN%%\\\\\"\r\n\
 if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
 \r\n\
 echo Installing...\r\n\
-pushd \"%%DTMBIN%%\\\"\r\n\
+pushd \"%%DTMBIN%%\\\\\"\r\n\
 if not errorlevel 0 echo ERROR & pause & exit /B 1\r\n\
 \"%%DTMBIN%%\\\\updatefilters.exe\"\r\n\
 if not errorlevel 0 echo ERROR & pause & exit /B 1\r\npopd\r\n" \
