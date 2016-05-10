@@ -175,7 +175,7 @@ prepare_test_image()
   { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f raw ${TEST_IMAGE_NAME} 20G; }
 }
 
-if ${CLIENT_WORLD_ACCESS}; then
+if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
     WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
                      -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
 fi
