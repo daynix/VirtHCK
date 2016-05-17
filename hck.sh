@@ -15,13 +15,15 @@ VM_START_TIMEOUT=10
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
+  echo Usage:
+  echo $0" [st] [c1] [c2]"
+  echo
   echo This script starts VirtHCK Studio with two Clients
-  echo if executed without parameters or you can  specify
-  echo VMs to run by following parameters:
+  echo if executed without parameters, or you can specify
+  echo which VMs to run with the following parameters:
   echo st - Start HCK Studio VM
   echo c1 - Start HCK Client 1 VM
   echo c2 - Start HCK Client 2 VM
-  echo $0" [st | c1 | c2] [ c1 | c2 ] [c2]"
   exit
 fi
 
@@ -29,6 +31,31 @@ if test x`whoami` != xroot
 then
   echo This script must be run as superuser
   exit 1
+fi
+
+while [ $# -gt 0 ]
+do
+key="$1"
+case $key in
+    st)
+    RUN_STUDIO=true
+    ;;
+    c1)
+    RUN_CLIENT1=true
+    ;;
+    c2)
+    RUN_CLIENT2=true
+    ;;
+    *)
+    echo "Unknown option: ${key}"
+    exit 1
+    ;;
+esac
+shift
+done
+
+if [ -z ${RUN_STUDIO} ] && [ -z ${RUN_CLIENT1} ] && [ -z ${RUN_CLIENT2} ]; then
+    RUN_ALL=true
 fi
 
 SCRIPTS_DIR=`dirname $0`
@@ -50,15 +77,15 @@ echo Creating bridges...
 create_bridges
 
 loop_run_reset
-if [ "$#" -eq 0 ] || [ "$1" = "st" ]; then
+if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
   loop_run_vm ${SCRIPTS_DIR}/run_hck_studio.sh &
   sleep $VM_START_TIMEOUT
 fi
-if [ "$#" -eq 0 ] || [ "$1" = "c1" ] || [ "$2" = "c1" ]; then
+if [ x"${RUN_CLIENT1}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
   loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh 1 &
   sleep $VM_START_TIMEOUT
 fi
-if [ "$#" -eq 0 ] || [ "$1" = "c2" ] || [ "$2" = "c2" ] || [ "$3" = "c2" ]; then
+if [ x"${RUN_CLIENT2}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
   loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh 2 &
 fi
 sleep 2
