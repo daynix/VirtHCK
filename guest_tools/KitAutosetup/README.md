@@ -14,13 +14,11 @@ Prerequisites
 ===============
 * On the Linux host Samba server is needed.
 * In the Samba Share directory, that is shared between the host and the guests
-(which can be configured in
+(which can be configured in the setup file, which is by default:
 [hck_setup.cfg](https://github.com/daynix/VirtHCK/blob/master/hck_setup.cfg))
-the **complete** installation directory of the Kit Controller (Which contains
-the setup file and the Installers directory) is required. It can be obtained by
-running the Kit installer on a Windows machine (possibly the intended HCK
-Controller itself) and choosing the option to download for installation on a
-separate computer.
+the **complete** installation directory of the Kit Controller is required. It
+can be obtained by running the Kit installer on a Windows machine and choosing
+the option to download for installation on a separate computer.
 
 Usage
 ===============

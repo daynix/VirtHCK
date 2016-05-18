@@ -16,7 +16,7 @@ VM_START_TIMEOUT=10
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
   echo Usage:
-  echo $0" [st] [c1] [c2]"
+  echo $0" [-c <CONFIG_FILE>] [st] [c1] [c2]"
   echo
   echo This script starts VirtHCK Studio with two Clients
   echo if executed without parameters, or you can specify
@@ -24,6 +24,10 @@ then
   echo st - Start HCK Studio VM
   echo c1 - Start HCK Client 1 VM
   echo c2 - Start HCK Client 2 VM
+  echo
+  echo The default configuration file is \"hck_setup.cfg\" in the same directory
+  echo that the script is run from. A different file can be specified using the
+  echo \"-c\" option.
   exit
 fi
 
@@ -37,6 +41,10 @@ while [ $# -gt 0 ]
 do
 key="$1"
 case $key in
+    -c)
+    CONFIG_FILE="$2"
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
@@ -59,7 +67,20 @@ if [ -z ${RUN_STUDIO} ] && [ -z ${RUN_CLIENT1} ] && [ -z ${RUN_CLIENT2} ]; then
 fi
 
 SCRIPTS_DIR=`dirname $0`
-. ${SCRIPTS_DIR}/hck_setup.cfg
+if [ -z ${CONFIG_FILE+x} ]; then
+    if [ -f "${SCRIPTS_DIR}/hck_setup.cfg" ]; then
+        CONFIG_FILE="${SCRIPTS_DIR}/hck_setup.cfg"
+    else
+        echo "A configuration file is not present or specified."
+        echo "Please refer to help ($0 -h) for details."
+        exit 1
+    fi
+elif [ ! -f "${CONFIG_FILE}" ]; then
+    echo "The file ${CONFIG_FILE} does not exist."
+    exit 1
+fi
+
+. ${CONFIG_FILE}
 
 kill_jobs() {
   jobs -p > /tmp/.jobs_$$
@@ -67,26 +88,42 @@ kill_jobs() {
   rm -f /tmp/.jobs_$$
 }
 
+make_bridge_script() {
+SCRIPTFILE="${HCK_ROOT}"/$1
+REAL_ME=`logname`
+cat <<EOF > ${SCRIPTFILE}
+#!/bin/sh
+. ${CONFIG_FILE}
+$2 $3 \$1
+EOF
+chmod 755 ${SCRIPTFILE}
+chown ${REAL_ME}:`id -g -n ${REAL_ME}` ${SCRIPTFILE}
+}
+
+make_bridge_script "hck_ctrl_bridge_ifup_${UNIQUE_ID}.sh" "enslave_iface" '${CTRL_BR_NAME}'
+make_bridge_script "hck_world_bridge_ifup_${UNIQUE_ID}.sh" "enslave_iface" '${WORLD_BR_NAME}'
+make_bridge_script "hck_test_bridge_ifup_${UNIQUE_ID}.sh" "enslave_test_iface" '${TEST_BR_NAME}'
+
 echo
 dump_config
 echo
 
-trap "kill_jobs; loop_run_reset; remove_bridges; exit 0" INT
+trap "kill_jobs; loop_run_reset; remove_bridges; remove_bridge_scripts; exit 0" INT
 
 echo Creating bridges...
 create_bridges
 
 loop_run_reset
 if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
-  loop_run_vm ${SCRIPTS_DIR}/run_hck_studio.sh &
+  loop_run_vm ${SCRIPTS_DIR}/run_hck_studio.sh ${CONFIG_FILE} &
   sleep $VM_START_TIMEOUT
 fi
 if [ x"${RUN_CLIENT1}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
-  loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh 1 &
+  loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh ${CONFIG_FILE} 1 &
   sleep $VM_START_TIMEOUT
 fi
 if [ x"${RUN_CLIENT2}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
-  loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh 2 &
+  loop_run_vm ${SCRIPTS_DIR}/run_hck_client.sh ${CONFIG_FILE} 2 &
 fi
 sleep 2
 
@@ -97,4 +134,5 @@ wait
 
 sleep 2
 remove_bridges
+remove_bridge_scripts
 loop_run_reset

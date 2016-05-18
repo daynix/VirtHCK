@@ -1,0 +1,3 @@
+hck_ctrl_bridge_ifup_*.sh
+hck_test_bridge_ifup_*.sh
+hck_world_bridge_ifup_*.sh

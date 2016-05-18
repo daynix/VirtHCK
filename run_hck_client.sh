@@ -11,11 +11,12 @@
 # This code is licensed under standard 3-clause BSD license.
 # See file LICENSE supplied with this package for the full license text.
 
-CLIENT_NUM=$1
+CLIENT_NUM=$2
 
 echo "Starting HCK client #${CLIENT_NUM}"
 
-. `dirname $0`/hck_setup.cfg
+# Run the config file passed here
+. $1
 
 client_ctrl_ifname()
 {
@@ -24,7 +25,7 @@ client_ctrl_ifname()
 
 client_test_ifname()
 {
-  DEVICE_NUM=$1
+  DEVICE_NUM=$2
 
   echo t${DEVICE_NUM}c${CLIENT_NUM}_${UNIQUE_ID}
 }
@@ -41,7 +42,7 @@ client_transfer_mac()
 
 client_test_mac()
 {
-  DEVICE_NUM=$1
+  DEVICE_NUM=$2
 
   echo 56:cc:cc:0${CLIENT_NUM}:0${DEVICE_NUM}:cc
 }
@@ -176,7 +177,7 @@ prepare_test_image()
 }
 
 if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
-    WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
+    WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
                      -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
 fi
 
@@ -192,7 +193,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        TEST_DEVICE_ID=""
        case ${TEST_NETWORK_INTERFACE} in
        tap)
-          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup.sh,downscript=no,ifname=`client_test_ifname 1`,queues=$(netdev_queues_num)"
+          TAP_DEVICE="-netdev tap,id=hostnet2,vhost=${VHOST_STATE},script=${HCK_ROOT}/hck_test_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=`client_test_ifname 1`,queues=$(netdev_queues_num)"
           TEST_DEVICE_ID=",id=`client_test_ifname 1`"
           ;;
        macvtap)
@@ -282,7 +283,7 @@ if [ ${SHARE_ON_HOST} != "false" ] && [ -e "${SHARE_ON_HOST}/USE_SHARE" ]; then
                        -device ${FILE_TRANSFER_DEVICE},netdev=filenet0,mac=`client_transfer_mac`"
 fi
 
-CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup.sh,downscript=no,ifname=`client_ctrl_ifname`
+CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=`client_ctrl_ifname`
                  -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${BUS_NAME}.0,id=`client_ctrl_ifname`"
 
 ${QEMU_BIN} \
