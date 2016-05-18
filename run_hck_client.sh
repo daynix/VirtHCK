@@ -178,10 +178,10 @@ prepare_test_image()
 
 if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
     WORLD_NET_IFACE="-netdev tap,id=hostnet9,script=${HCK_ROOT}/hck_world_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=tmp_${UNIQUE_ID}_${CLIENT_NUM}
-                     -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:11:0${CLIENT_NUM}:${UNIQUE_ID},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
+                     -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:0${CLIENT_NUM}:${UID_FIRST}:${UID_SECOND},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
 fi
 
-IDE_STORAGE_PAIR="-drive file=`image_name`,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
+IDE_STORAGE_PAIR="-drive file=`image_name`,serial=${CLIENT_NUM}1${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
 
 if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
 
@@ -212,18 +212,18 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
                          -device ${TEST_DEV_NAME}`extra_params_cmd`,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=${BUS_NAME}.0$(client_mq_device_param)${TEST_DEVICE_ID}"
        ;;
     bootstorage)
-       BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}110${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}1${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=vio_block"
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk"
        prepare_test_image
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}000${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0,addr=0x5
                           -device scsi-hd,drive=virtio_scsi"
        prepare_test_image
@@ -244,7 +244,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
         -device usb-ehci,id=vhck_ehci
-        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}000${UNIQUE_ID},file=${TEST_IMAGE_NAME}
+        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}0${UNIQUE_ID},file=${TEST_IMAGE_NAME}
         -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
 
         prepare_test_image

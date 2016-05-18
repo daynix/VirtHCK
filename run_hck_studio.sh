@@ -20,7 +20,7 @@ STUDIO_CONTROL_IFNAME=cs_${UNIQUE_ID}
 STUDIO_CONTROL_MAC=56:cc:cc:ff:cc:cc
 STUDIO_TRANSFER_MAC=56:aa:aa:ff:aa:aa
 STUDIO_WORLD_IFNAME=ws_${UNIQUE_ID}
-STUDIO_WORLD_MAC=56:${UNIQUE_ID}:${UNIQUE_ID}:${UNIQUE_ID}:${UNIQUE_ID}:dd
+STUDIO_WORLD_MAC=56:${UID_FIRST}:${UID_SECOND}:${UID_FIRST}:${UID_SECOND}:dd
 
 WORLD_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_world_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=${STUDIO_WORLD_IFNAME}
                  -device ${WORLD_NET_DEVICE},netdev=hostnet0,mac=${STUDIO_WORLD_MAC},bus=pci.0,id=${STUDIO_WORLD_IFNAME}"
