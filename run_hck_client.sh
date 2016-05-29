@@ -25,7 +25,7 @@ client_ctrl_ifname()
 
 client_test_ifname()
 {
-  DEVICE_NUM=$2
+  DEVICE_NUM=$1
 
   echo t${DEVICE_NUM}c${CLIENT_NUM}_${UNIQUE_ID}
 }
@@ -42,7 +42,7 @@ client_transfer_mac()
 
 client_test_mac()
 {
-  DEVICE_NUM=$2
+  DEVICE_NUM=$1
 
   echo 56:cc:cc:0${CLIENT_NUM}:0${DEVICE_NUM}:cc
 }
