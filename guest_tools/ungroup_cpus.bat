@@ -10,6 +10,6 @@
 :: This code is licensed under standard 3-clause BSD license.
 :: See file LICENSE supplied with this package for the full license text.
 ::
-bcdedit /set groupsize 2
-bcdedit /set groupaware on
+bcdedit /set groupaware off
+bcdedit /deletevalue groupsize
 shutdown /r /t 5 /f
