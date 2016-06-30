@@ -71,21 +71,9 @@ sed -i "s|REPLACE-SUFFIX|$SUFFIX|g" "$SMBShareDir/${ClientInstFile##*/}"
 # Copying the BGI file to share
 cp "$bgiFile" "$SMBShareDir/${bgiFile##*/}"
 # Creating a run script for the studio
-printf "@echo off\r\n\
-echo Disabling the external network...\r\n\
-echo This may take a while - please be patient...\r\n\
-\r\n\
-netsh interface set interface \"External\" DISABLE\r\n\
-\r\n\
-echo Starting H%sK studio...\r\n\
-\r\n\
-pushd \"%%WTTSTDIO%%\\\\\"\r\n\
-\"%%WTTSTDIO%%\\h%skstudio.exe\"\r\n\
-popd\r\n\
-\r\n\
-echo Enabling the external network...\r\n\
-netsh interface set interface \"External\" \
-ENABLE\r\n" "$LETTER" "${LETTER,,}" > "$SMBShareDir/RunStudio.bat"
+printf "start /D \"%%WTTSTDIO%%\\\\\" \"H%sK Studio\" \
+\"%%WTTSTDIO%%\\h%skstudio.exe\"\r\n" "$LETTER" "${LETTER,,}"\
+> "$SMBShareDir/RunStudio.bat"
 # Creating an "Update Filters" script for the studio
 printf "@echo off\r\n\
 \r\n\
