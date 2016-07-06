@@ -50,13 +50,12 @@ installation.
 
 End Result
 ===============
-* In the end, the freshly installed machines will become ready for running HCK
-or HLK tests in the VirtHCK environment.
-* You should run the Kit using the special shortcut that is created on the
-desktop of the Controller machine - it turns off the access to the external
-network while the Studio is running.
+* Upon completion, the freshly installed machines will become ready for running
+HCK or HLK tests in the VirtHCK environment.
 * You can update the Kit filters, from time to time, using the shortcut created
 on the desktop of the Controller machine. Internet access is needed for that.
+* The Kit Studio can be started with the special shortcut that is created on the
+desktop of the Controller machine.
 
 Troubleshooting
 ===============
