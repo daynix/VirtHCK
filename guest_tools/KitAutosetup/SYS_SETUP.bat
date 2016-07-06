@@ -80,8 +80,9 @@ for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
                 "C:\REPLACE-CONTROLLER-INST-FILE"
             ) else (
                 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CONTROLLER-INST-FILE" /f
+                wmic computersystem where name="%COMPUTERNAME%" call rename name="HREPLACE-LETTERK-STUDIO"
                 echo Will restart now...
-                netdom renamecomputer %computername% /NewName:HREPLACE-LETTERK-STUDIO /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+                shutdown /r /t 20 /f
             )
         )
         if "!mac!"=="56-CC-CC-01-CC-CC" (
@@ -92,8 +93,9 @@ for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
                 "C:\REPLACE-CLIENT-INST-FILE"
             ) else (
                 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+                wmic computersystem where name="%COMPUTERNAME%" call rename name="CL1-REPLACE"
                 echo Will restart now...
-                netdom renamecomputer %computername% /NewName:"CL1-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+                shutdown /r /t 20 /f
             )
         )
         if "!mac!"=="56-CC-CC-02-CC-CC" (
@@ -104,8 +106,9 @@ for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
                 "C:\REPLACE-CLIENT-INST-FILE"
             ) else (
                 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce" /v "HREPLACE-LETTERKinstall" /t REG_SZ /d "C:\REPLACE-CLIENT-INST-FILE" /f
+                wmic computersystem where name="%COMPUTERNAME%" call rename name="CL2-REPLACE"
                 echo Will restart now...
-                netdom renamecomputer %computername% /NewName:"CL2-REPLACE" /UserD:Administrator /PasswordD:"PASSWORD-REPLACE" /Force /REBoot:20
+                shutdown /r /t 20 /f
             )
         )
     )
