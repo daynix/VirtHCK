@@ -54,6 +54,11 @@ End Result
 HCK or HLK tests in the VirtHCK environment.
 * You can update the Kit filters, from time to time, using the shortcut created
 on the desktop of the Controller machine. Internet access is needed for that.
+* A shared folder between the Controller and the clients will be created on the
+Controller machine. It can be accessed via `\\HCK-STUDIO\HCK-SHARE` (or
+`\\HLK-STUDIO\HLK-SHARE`). Note, that by writing to it you are writing to
+the image of the Controller VM, so it is better to use the default VirtHCK
+Samba share when possible.
 * The Kit Studio can be started with the special shortcut that is created on the
 desktop of the Controller machine.
 

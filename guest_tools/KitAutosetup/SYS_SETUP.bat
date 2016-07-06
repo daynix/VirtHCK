@@ -73,6 +73,8 @@ for /f "delims=" %%a in ('getmac /fo csv /nh /v') do (
         if "!mac!"=="56-CC-CC-FF-CC-CC" (
             netsh interface ip set address name="!name!" static 192.168.100.1 255.255.255.0
             netsh interface set interface name="!name!" newname="Control"
+            if not exist "C:\HREPLACE-LETTERK-SHARE" mkdir "C:\HREPLACE-LETTERK-SHARE"
+            net share HREPLACE-LETTERK-SHARE="C:\HREPLACE-LETTERK-SHARE" /GRANT:Everyone,FULL /UNLIMITED
             copy "\\REPLACE-SMB-ADDRESS\qemu\REPLACE-CONTROLLER-INST-FILE" "C:\"
             copy "\\REPLACE-SMB-ADDRESS\qemu\RunStudio.bat" "C:\Users\Administrator\Desktop\"
             copy "\\REPLACE-SMB-ADDRESS\qemu\UpdateFilters.bat" "C:\Users\Administrator\Desktop\"
