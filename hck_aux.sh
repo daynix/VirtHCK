@@ -135,20 +135,15 @@ remove_bridges() {
 
 queue_len_tx()
 {
-    re='^[0-9]+$'
-    if [ -z "$1" ] || ! [ $1 =~ "$re" ]
-    then
-        p1=1
-    else
-        p1=$1
-    fi
+    case $1 in
+        ''|*[!0-9]*) p1=1 ;;
+        *) p1=$1 ;;
+    esac
 
-    if [ -z "$2" ] || ! [ $2 =~ "$re" ]
-    then
-        p2=1
-    else
-        p2=$2
-    fi
+    case $2 in
+        ''|*[!0-9]*) p2=1 ;;
+        *) p2=$2 ;;
+    esac
 
     echo $(( ( $p1 > $p2 ? $p1 : $p2 ) * 2048 ))
 }
