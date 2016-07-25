@@ -240,10 +240,15 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x9"
        ;;
-    usb)
+    usb|usb3)
+       if [ "$TEST_DEV_TYPE" = "usb" ]; then
+	       usbkind=usb-ehci
+       else
+	       usbkind=nec-usb-xhci
+       fi
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
-        -device usb-ehci,id=vhck_ehci
+        -device ${usbkind},id=vhck_ehci
         -drive if=none,id=usbdisk,serial=${CLIENT_NUM}0${UNIQUE_ID},file=${TEST_IMAGE_NAME}
         -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
 
