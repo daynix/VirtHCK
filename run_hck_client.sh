@@ -168,12 +168,12 @@ case $MACHINE_TYPE in
         ;;
 esac
 
-TEST_IMAGE_NAME=$(dirname `image_name`)/client${CLIENT_NUM}_test_image.raw
+TEST_IMAGE_NAME=$(dirname `image_name`)/client${CLIENT_NUM}_test_image.qcow2
 
 prepare_test_image()
 {
   test -f ${TEST_IMAGE_NAME} || \
-  { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f raw ${TEST_IMAGE_NAME} 20G; }
+  { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f qcow2 ${TEST_IMAGE_NAME} 20G; }
 }
 
 if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
@@ -217,13 +217,13 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,format=qcow2,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk"
        prepare_test_image
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,format=qcow2,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0,addr=0x5
                           -device scsi-hd,drive=virtio_scsi"
        prepare_test_image
@@ -249,7 +249,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
         -device ${usbkind},id=vhck_ehci
-        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}0${UNIQUE_ID},file=${TEST_IMAGE_NAME}
+        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}0${UNIQUE_ID},file=${TEST_IMAGE_NAME},format=qcow2
         -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
 
         prepare_test_image
