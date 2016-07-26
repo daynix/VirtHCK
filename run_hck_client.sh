@@ -168,10 +168,18 @@ case $MACHINE_TYPE in
         ;;
 esac
 
-TEST_IMAGE_NAME=$(dirname `image_name`)/client${CLIENT_NUM}_test_image.qcow2
+test_image_name()
+{
+  local IMAGE_NUM=$1
+
+  echo $(dirname `image_name`)/client${CLIENT_NUM}_test_image${IMAGE_NUM}.qcow2
+}
 
 prepare_test_image()
 {
+  local IMAGE_NUM=$1
+  local TEST_IMAGE_NAME=`test_image_name ${IMAGE_NUM}`
+
   test -f ${TEST_IMAGE_NAME} || \
   { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f qcow2 ${TEST_IMAGE_NAME} 20G; }
 }
@@ -217,16 +225,16 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,format=qcow2,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk"
-       prepare_test_image
+       prepare_test_image 1
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=${TEST_IMAGE_NAME},if=none,format=qcow2,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0,addr=0x5
                           -device scsi-hd,drive=virtio_scsi"
-       prepare_test_image
+       prepare_test_image 1
        ;;
     serial)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -249,10 +257,13 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
         -device ${usbkind},id=vhck_ehci
-        -drive if=none,id=usbdisk,serial=${CLIENT_NUM}0${UNIQUE_ID},file=${TEST_IMAGE_NAME},format=qcow2
-        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk,id=vhck_usbdisk "
+        -drive if=none,id=usbdisk1,serial=${CLIENT_NUM}1${UNIQUE_ID},file=`test_image_name 1`,format=qcow2
+        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk1,id=vhck_usbdisk1
+        -drive if=none,id=usbdisk2,serial=${CLIENT_NUM}2${UNIQUE_ID},file=`test_image_name 2`,format=qcow2
+        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk2,id=vhck_usbdisk2"
 
-        prepare_test_image
+        prepare_test_image 1
+        prepare_test_image 2
         ;;
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
