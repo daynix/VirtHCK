@@ -237,6 +237,11 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
                           -device scsi-hd,drive=virtio_scsi"
        prepare_test_image 1
        ;;
+    fs-filter)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,format=qcow2,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
+       prepare_test_image 1
+       ;;
     serial)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=virtio_serial_pci0,addr=0x07"
