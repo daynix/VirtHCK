@@ -178,10 +178,11 @@ test_image_name()
 prepare_test_image()
 {
   local IMAGE_NUM=$1
+  local TEST_IMAGE_SIZE=30G
   local TEST_IMAGE_NAME=`test_image_name ${IMAGE_NUM}`
 
   test -f ${TEST_IMAGE_NAME} || \
-  { echo Creating test image ${TEST_IMAGE_NAME}...; qemu-img create -f qcow2 ${TEST_IMAGE_NAME} 20G; }
+  { echo Creating test image of ${TEST_IMAGE_SIZE} ${TEST_IMAGE_NAME}...; qemu-img create -f qcow2 ${TEST_IMAGE_NAME} ${TEST_IMAGE_SIZE}; }
 }
 
 if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
