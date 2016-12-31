@@ -38,6 +38,7 @@ STUDIO_UUID="-uuid ${UNIQUE_ID}127c-8795-4e67-95da-8dd0a8891cd1"
 fi
 
 ${QEMU_BIN} \
+    ${QEMU_RUN_AS} \
     -drive file=${STUDIO_IMAGE},if=none,id=ide_${UNIQUE_ID}${DRIVE_CACHE_OPTION} \
     -device ide-hd,drive=ide_${UNIQUE_ID},serial=${UID_FIRST}${UNIQUE_ID} \
     ${WORLD_NET_DEVICE} \
