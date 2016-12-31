@@ -39,7 +39,7 @@ fi
 
 ${QEMU_BIN} \
     ${QEMU_RUN_AS} \
-    -drive file=${STUDIO_IMAGE},if=none,id=ide_${UNIQUE_ID}${DRIVE_CACHE_OPTION} \
+    -drive file=${STUDIO_IMAGE}$(set_qcow2_l2_cache ${STUDIO_IMAGE}),if=none,id=ide_${UNIQUE_ID}${DRIVE_CACHE_OPTION} \
     -device ide-hd,drive=ide_${UNIQUE_ID},serial=${UID_FIRST}${UNIQUE_ID} \
     ${WORLD_NET_DEVICE} \
     ${CTRL_NET_DEVICE} \
