@@ -32,7 +32,7 @@ then
   exit
 fi
 
-if test x`whoami` != xroot
+if [ "$USER" != root ]
 then
   echo This script must be run as superuser
   exit 1
