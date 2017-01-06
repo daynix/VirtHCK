@@ -344,6 +344,7 @@ ${QEMU_BIN} \
         ${WORLD_NET_IFACE} \
         ${MACHINE_UUID} \
         -machine ${MACHINE_TYPE} \
+        -nodefaults -nodefconfig \
         -m ${CLIENT_MEMORY} -smp `client_cpus`,cores=`client_cpus` -enable-kvm \
         -cpu qemu64,+x2apic,+fsgsbase,model=13${ENLIGHTENMENTS_OPTION} \
         -usbdevice tablet -boot ${BOOT_ORDER} \
