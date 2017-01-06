@@ -33,13 +33,17 @@ if [ ${SHARE_ON_HOST} != "false" ]; then
                        -device ${FILE_TRANSFER_DEVICE},netdev=filenet0,mac=${STUDIO_TRANSFER_MAC}"
 fi
 
+if [ "${DISABLE_UUIDS}" != "true" ]; then
+STUDIO_UUID="-uuid 9999127c-8795-4e67-95da-8dd0a8891cd1"
+fi
+
 ${QEMU_BIN} \
     -drive file=${STUDIO_IMAGE},if=ide${DRIVE_CACHE_OPTION} \
     ${WORLD_NET_DEVICE} \
     ${CTRL_NET_DEVICE} \
     ${FILE_TRANSFER_SETUP} \
     -m 2G -smp 1 -enable-kvm -cpu qemu64,+x2apic,+fsgsbase -usbdevice tablet \
-    -uuid 9999127c-8795-4e67-95da-8dd0a8891cd1 \
+    ${STUDIO_UUID} \
     -name HCK-Studio_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
     -rtc base=localtime \
     ${GRAPHICS_STUDIO} ${MONITOR_STUDIO} ${SNAPSHOT_OPTION} ${STUDIO_EXTRA}

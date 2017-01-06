@@ -167,7 +167,9 @@ case $MACHINE_TYPE in
         CTRL_BUS_NAME=pci
         DISABLE_S3_PARAM=PIIX4_PM.disable_s3
         DISABLE_S4_PARAM=PIIX4_PM.disable_s4
-        MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM}"
+        if [ "$DISABLE_UUIDS" != "true" ]; then
+            MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM}"
+        fi
         ;;
 esac
 
