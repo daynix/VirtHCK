@@ -223,6 +223,7 @@ dump_config()
 
 cat <<END
 Setup configuration
+  Machine type................${MACHINE_TYPE}
   Setup ID................... ${UNIQUE_ID}
   Test suite type............ ${TEST_DEV_TYPE}
   Test device................ ${TEST_DEV_NAME}
