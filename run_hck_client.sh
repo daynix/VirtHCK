@@ -82,6 +82,24 @@ extra_params_cmd()
     fi
 }
 
+cdrom_cmd()
+{
+    eval VAR_NAME=\$CDROM_CLIENT${CLIENT_NUM}
+    if [ ! -z "${VAR_NAME}" ]
+    then
+        echo "-cdrom ${VAR_NAME}"
+    fi
+}
+
+bios_cmd()
+{
+    eval VAR_NAME=\$BIOS_CLIENT${CLIENT_NUM}
+    if [ ! -z "${VAR_NAME}" ]
+    then
+        echo "-bios ${VAR_NAME}"
+    fi
+}
+
 extra_cmd()
 {
   VAR_NAME=CLIENT${CLIENT_NUM}_EXTRA
@@ -332,6 +350,7 @@ ${QEMU_BIN} \
         -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
+        `cdrom_cmd` `bios_cmd` \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `usb_cmd` `extra_cmd` \
         `trace_cmd` \
          2>&1 | `log_cmd`
