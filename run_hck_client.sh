@@ -154,14 +154,17 @@ log_cmd()
 #Machine type related difference
 case $MACHINE_TYPE in
     q35 )
-        BUS_NAME=pcie
+        CTRL_BUS_NAME=pcie
+        BUS_NAME=root1
         DISABLE_S3_PARAM=ICH9-LPC.disable_s3
         DISABLE_S4_PARAM=ICH9-LPC.disable_s4
         #Windows 2012R2 crashes during boot on Q35 machine with UUID set
         MACHINE_UUID=""
+        Q35_IOH_DEVICE="-device ioh3420,bus=pcie.0,id=root1.0,slot=1"
         ;;
     * )
         BUS_NAME=pci
+        CTRL_BUS_NAME=pci
         DISABLE_S3_PARAM=PIIX4_PM.disable_s3
         DISABLE_S4_PARAM=PIIX4_PM.disable_s4
         MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM}"
@@ -306,12 +309,13 @@ if [ ${SHARE_ON_HOST} != "false" ] && [ -e "${SHARE_ON_HOST}/USE_SHARE" ]; then
 fi
 
 CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=`client_ctrl_ifname`
-                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${BUS_NAME}.0,id=`client_ctrl_ifname`"
+                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${CTRL_BUS_NAME}.0,id=`client_ctrl_ifname`"
 
 ${QEMU_BIN} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
         ${CTRL_NET_DEVICE} \
+        ${Q35_IOH_DEVICE} \
         ${TEST_NET_DEVICES} \
         ${FILE_TRANSFER_SETUP} \
         ${TEST_SERIAL_DEVICES} \
