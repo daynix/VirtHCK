@@ -114,7 +114,7 @@ elif [ "$SHARE_ON_HOST" != "false" ]
 then
    echo "Directory ${SHARE_ON_HOST} does not exist!"
    echo "Either create it, or set the \"SHARE_ON_HOST\" variable to \"false\"."
-   echo "Running withoput a share..."
+   echo "Running without a share..."
    SHARE_ON_HOST="false"
 fi
 
