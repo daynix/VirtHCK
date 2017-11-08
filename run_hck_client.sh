@@ -294,6 +294,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
         prepare_test_image 1
         prepare_test_image 2
         ;;
+    ivshmem)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_IVSHMEM_DEVICE="-chardev socket,path=${IVSHMEM_SOCKET},id=ivshmemid -device ${TEST_DEV_NAME}`extra_params_cmd`,chardev=ivshmemid"
+       ;;
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
         ;;
@@ -340,6 +344,7 @@ ${QEMU_BIN} \
         ${FILE_TRANSFER_SETUP} \
         ${TEST_SERIAL_DEVICES} \
         ${TEST_BALLOON_DEVICE} \
+        ${TEST_IVSHMEM_DEVICE} \
         ${TEST_RNG_DEVICE} \
         ${WORLD_NET_IFACE} \
         ${MACHINE_UUID} \

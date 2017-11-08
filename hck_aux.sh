@@ -275,3 +275,18 @@ remove_bridge_scripts() {
     rm -f ${HCK_ROOT}"/hck_${p}_bridge_ifup_${UNIQUE_ID}.sh"
   done
 }
+
+IVSHMEM_SOCKET=/tmp/ivshmem_socket_${UNIQUE_ID}
+IVSHMEM_PID=/var/run/ivshmem-server_${UNIQUE_ID}.pid
+
+run_ivshmem_server() {
+  if [ ${TEST_DEV_TYPE} = "ivshmem" ]; then
+    echo Running ivshmem server...
+    sudo rm -f /tmp/ivshmem_socket_${UNIQUE_ID}
+    ${IVSHMEM_SERVER_BIN} -p ${IVSHMEM_PID}  -S ${IVSHMEM_SOCKET}
+  fi
+}
+
+kill_ivshmem_server() {
+  sudo kill ${cat ${IVSHMEM_PID}}
+}
