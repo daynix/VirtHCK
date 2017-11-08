@@ -113,6 +113,8 @@ trap "kill_jobs; loop_run_reset; remove_bridges; remove_bridge_scripts; exit 0" 
 echo Creating bridges...
 create_bridges
 
+run_ivshmem_server
+
 loop_run_reset
 if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
   loop_run_vm ${SCRIPTS_DIR}/run_hck_studio.sh ${CONFIG_FILE} &
@@ -136,3 +138,4 @@ sleep 2
 remove_bridges
 remove_bridge_scripts
 loop_run_reset
+kill_ivshmem_server
