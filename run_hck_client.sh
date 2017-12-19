@@ -186,7 +186,7 @@ case $MACHINE_TYPE in
         DISABLE_S3_PARAM=PIIX4_PM.disable_s3
         DISABLE_S4_PARAM=PIIX4_PM.disable_s4
         if [ "$DISABLE_UUIDS" != "true" ]; then
-            MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a889100${CLIENT_NUM}"
+            MACHINE_UUID="-uuid CDEF127c-8795-4e67-95da-8dd0a88${UNIQUE_ID}${CLIENT_NUM}"
         fi
         ;;
 esac
