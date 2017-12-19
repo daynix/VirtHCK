@@ -32,19 +32,19 @@ client_test_ifname()
 
 client_ctrl_mac()
 {
-  echo 56:cc:cc:0${CLIENT_NUM}:cc:cc
+  echo 56:${UID_FIRST}:${UID_SECOND}:0${CLIENT_NUM}:cc:cc
 }
 
 client_transfer_mac()
 {
-  echo 56:aa:aa:0${CLIENT_NUM}:aa:aa
+  echo 56:${UID_FIRST}:${UID_SECOND}:0${CLIENT_NUM}:aa:aa
 }
 
 client_test_mac()
 {
   DEVICE_NUM=$1
 
-  echo 56:cc:cc:0${CLIENT_NUM}:0${DEVICE_NUM}:cc
+  echo 56:${UID_FIRST}:${UID_SECOND}:0${CLIENT_NUM}:0${DEVICE_NUM}:cc
 }
 
 client_cpus()
