@@ -34,7 +34,7 @@ if [ ${SHARE_ON_HOST} != "false" ]; then
 fi
 
 if [ "${DISABLE_UUIDS}" != "true" ]; then
-STUDIO_UUID="-uuid 9999127c-8795-4e67-95da-8dd0a8891cd1"
+STUDIO_UUID="-uuid ${UNIQUE_ID}127c-8795-4e67-95da-8dd0a8891cd1"
 fi
 
 ${QEMU_BIN} \
