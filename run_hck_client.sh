@@ -213,7 +213,8 @@ if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
                      -device ${WORLD_NET_DEVICE},netdev=hostnet9,mac=22:11:11:0${CLIENT_NUM}:${UID_FIRST}:${UID_SECOND},id=tmp_${UNIQUE_ID}_${CLIENT_NUM}"
 fi
 
-IDE_STORAGE_PAIR="-drive file=`image_name`,serial=${CLIENT_NUM}1${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
+IDE_STORAGE_PAIR="-drive file=`image_name`,if=none,id=ide_${UNIQUE_ID}_${CLIENT_NUM}${DRIVE_CACHE_OPTION}
+                  -device ide-hd,drive=ide_${UNIQUE_ID}_${CLIENT_NUM},serial=${CLIENT_NUM}1${UNIQUE_ID}
 
 if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
 
@@ -244,25 +245,26 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
                          -device ${TEST_DEV_NAME}`extra_params_cmd`,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=${BUS_NAME}.0$(client_mq_device_param)${TEST_DEVICE_ID}"
        ;;
     bootstorage)
-       BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block,serial=${CLIENT_NUM}1${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=vio_block"
+       BOOT_STORAGE_PAIR="-drive file=`image_name`,if=none,id=vio_block${DRIVE_CACHE_OPTION}
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=vio_block,serial=${CLIENT_NUM}1${UNIQUE_ID}"
        ;;
     storage-blk)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk"
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_blk${DRIVE_CACHE_OPTION}
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        prepare_test_image 1
        ;;
     storage-scsi)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=virtio_scsi${DRIVE_CACHE_OPTION}
                           -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0,addr=0x5
-                          -device scsi-hd,drive=virtio_scsi"
+                          -device scsi-hd,drive=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        prepare_test_image 1
        ;;
     fs-filter)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,format=qcow2,serial=${CLIENT_NUM}0${UNIQUE_ID}${DRIVE_CACHE_OPTION}"
+       TEST_STORAGE_PAIR="-drive file=`test_image_name 1`,if=none,format=qcow2,id=fs_filter${DRIVE_CACHE_OPTION}
+                          -device ide-hd,drive=fs_filter,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        prepare_test_image 1
        ;;
     serial)
@@ -286,10 +288,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="
         -device ${usbkind},id=vhck_ehci
-        -drive if=none,id=usbdisk1,serial=${CLIENT_NUM}1${UNIQUE_ID},file=`test_image_name 1`,format=qcow2
-        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk1,id=vhck_usbdisk1
-        -drive if=none,id=usbdisk2,serial=${CLIENT_NUM}2${UNIQUE_ID},file=`test_image_name 2`,format=qcow2
-        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk2,id=vhck_usbdisk2"
+        -drive if=none,id=usbdisk1,file=`test_image_name 1`,format=qcow2
+        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk1,id=vhck_usbdisk1,serial=${CLIENT_NUM}1${UNIQUE_ID}
+        -drive if=none,id=usbdisk2,file=`test_image_name 2`,format=qcow2
+        -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=vhck_ehci.0,drive=usbdisk2,id=vhck_usbdisk2",serial=${CLIENT_NUM}2${UNIQUE_ID}
 
         prepare_test_image 1
         prepare_test_image 2
