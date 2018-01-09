@@ -43,7 +43,7 @@ ${QEMU_BIN} \
     ${WORLD_NET_DEVICE} \
     ${CTRL_NET_DEVICE} \
     ${FILE_TRANSFER_SETUP} \
-    -m 2G -smp 1 -enable-kvm -cpu qemu64,+x2apic,+fsgsbase -usbdevice tablet \
+    -m 2G -smp 1 -enable-kvm -cpu qemu64,+x2apic,+fsgsbase -usb -device usb-tablet \
     ${STUDIO_UUID} \
     -name HCK-Studio_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
     -rtc base=localtime \
