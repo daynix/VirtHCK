@@ -214,7 +214,7 @@ if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
 fi
 
 IDE_STORAGE_PAIR="-drive file=`image_name`,if=none,id=ide_${UNIQUE_ID}_${CLIENT_NUM}${DRIVE_CACHE_OPTION}
-                  -device ide-hd,drive=ide_${UNIQUE_ID}_${CLIENT_NUM},serial=${CLIENT_NUM}1${UNIQUE_ID}
+                  -device ide-hd,drive=ide_${UNIQUE_ID}_${CLIENT_NUM},serial=${CLIENT_NUM}1${UNIQUE_ID}"
 
 if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
 
