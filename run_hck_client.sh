@@ -275,6 +275,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x8"
        ;;
+    pvpanic)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`"
+       ;;
     rng)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x9"
