@@ -53,6 +53,11 @@ client_cpus()
   eval echo \$${VAR_NAME}
 }
 
+client_memory()
+{
+  VAR_NAME=CLIENT${CLIENT_NUM}_MEMORY
+  eval echo \$${VAR_NAME}
+}
 graphics_cmd()
 {
   VAR_NAME=GRAPHICS_CLIENT${CLIENT_NUM}
@@ -360,7 +365,7 @@ ${QEMU_BIN} \
         ${MACHINE_UUID} \
         -machine ${MACHINE_TYPE} \
         -nodefaults -nodefconfig \
-        -m ${CLIENT_MEMORY} -smp `client_cpus`,cores=`client_cpus` -enable-kvm \
+        -m `client_memory` -smp `client_cpus`,cores=`client_cpus` -enable-kvm \
         -cpu qemu64,+x2apic,+fsgsbase,model=13${ENLIGHTENMENTS_OPTION} \
         -usb -device usb-tablet -boot ${BOOT_ORDER} \
         -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
