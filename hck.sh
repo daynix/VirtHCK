@@ -12,6 +12,7 @@
 # See file LICENSE supplied with this package for the full license text.
 
 VM_START_TIMEOUT=10
+ARGS_CFG=args.cfg
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
@@ -37,12 +38,58 @@ then
   exit 1
 fi
 
+> $ARGS_CFG
+
 while [ $# -gt 0 ]
 do
 key="$1"
 case $key in
     -c)
     CONFIG_FILE="$2"
+    shift
+    ;;
+    -id)
+    echo UNIQUE_ID=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -device_type)
+    echo TEST_DEV_TYPE=\"$2\" >> $ARGS_CFG
+    shift
+    ;;
+    -device_name)
+    echo TEST_DEV_NAME=\"$2\" >> $ARGS_CFG
+    shift
+    ;;
+    -device_extra)
+    echo TEST_DEV_EXTRA_PARAMS=\"$2\" >> $ARGS_CFG
+    shift
+    ;;
+    -st_image)
+    echo STUDIO_IMAGE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c1_image)
+    echo CLIENT1_IMAGE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c1_cpus)
+    echo CLIENT1_CPUS=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c1_memory)
+    echo CLIENT1_MEMORY=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c2_image)
+    echo CLIENT2_IMAGE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c2_cpus)
+    echo CLIENT2_CPUS=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -c2_memory)
+    echo CLIENT2_MEMORY=$2 >> $ARGS_CFG
     shift
     ;;
     st)

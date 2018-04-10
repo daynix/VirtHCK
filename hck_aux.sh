@@ -9,6 +9,10 @@
 # This code is licensed under standard 3-clause BSD license.
 # See file LICENSE supplied with this package for the full license text.
 
+#Overiding command line config arguments
+
+. `dirname $0`/args.cfg
+
 # Setup functions file
 
 # 4-digit unique ID
