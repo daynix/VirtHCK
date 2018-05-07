@@ -92,6 +92,10 @@ case $key in
     echo CLIENT2_MEMORY=$2 >> $ARGS_CFG
     shift
     ;;
+    -world_bridge)
+    echo WORLD_BR_NAME=$2 >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
