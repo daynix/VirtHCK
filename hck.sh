@@ -96,6 +96,10 @@ case $key in
     echo WORLD_BR_NAME=$2 >> $ARGS_CFG
     shift
     ;;
+    -qemu_bin)
+    echo QEMU_BIN=$2 >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
