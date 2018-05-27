@@ -40,7 +40,7 @@ REAL_ME=$USER
 if [ -n "$SUDO_USER" ]
 then
     REAL_ME=$SUDO_USER
-    [ "$RUN_QEMU_AS_ROOT" = true ] && QEMU_RUN_AS="-runas ${REAL_ME}"
+    [ "$RUN_QEMU_AS_ROOT" = true ] || QEMU_RUN_AS="-runas ${REAL_ME}"
 fi
 
 STUDIO_IMAGE=`readlink -f $STUDIO_IMAGE`
