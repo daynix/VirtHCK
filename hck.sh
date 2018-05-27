@@ -151,6 +151,7 @@ kill_jobs() {
 
 make_bridge_script() {
 SCRIPTFILE="${HCK_ROOT}"/$1
+REAL_ME=`logname`
 cat <<EOF > ${SCRIPTFILE}
 #!/bin/sh
 . ${CONFIG_FILE}

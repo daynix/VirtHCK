@@ -35,14 +35,6 @@ timestamp()
     echo `date -u +'%Y-%m-%dT%H-%M-%SZ'`
 }
 
-# Real user
-REAL_ME=$USER
-if [ -n "$SUDO_USER" ]
-then
-    REAL_ME=$SUDO_USER
-    [ "$RUN_QEMU_AS_ROOT" = true ] && QEMU_RUN_AS="-runas ${REAL_ME}"
-fi
-
 STUDIO_IMAGE=`readlink -f $STUDIO_IMAGE`
 CLIENT1_IMAGE=`readlink -f $CLIENT1_IMAGE`
 CLIENT2_IMAGE=`readlink -f $CLIENT2_IMAGE`
