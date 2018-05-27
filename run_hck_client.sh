@@ -351,7 +351,6 @@ CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup
                  -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${CTRL_BUS_NAME}.0,id=`client_ctrl_ifname`"
 
 ${QEMU_BIN} \
-        ${QEMU_RUN_AS} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
         ${CTRL_NET_DEVICE} \
