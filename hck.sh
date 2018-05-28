@@ -96,6 +96,18 @@ case $key in
     echo WORLD_BR_NAME=$2 >> $ARGS_CFG
     shift
     ;;
+  -world_net_device)
+    echo WORLD_NET_DEVICE=$2 >> $ARGS_CFG
+    shift
+    ;;
+  -ctrl_net_device)
+    echo CTRL_NET_DEVICE=$2 >> $ARGS_CFG
+    shift
+    ;;
+  -file_transfer_device)
+    echo FILE_TRANSFER_DEVICE=$2 >> $ARGS_CFG
+    shift
+    ;;
     -qemu_bin)
     echo QEMU_BIN=$2 >> $ARGS_CFG
     shift
