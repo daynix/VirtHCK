@@ -167,6 +167,12 @@ make_bridge_script "hck_test_bridge_ifup_${UNIQUE_ID}.sh" "enslave_test_iface" '
 
 trap "kill_jobs; loop_run_reset; remove_bridges; remove_bridge_scripts; exit 0" INT
 
+if [ ! "$END" = true ] ; then
+  echo
+  dump_config
+  echo
+fi
+
 if [ "$END" = true ] ; then
   remove_bridges
   remove_bridge_scripts
@@ -185,9 +191,6 @@ elif  [ "$CI_MODE" = true ] ; then
     ${SCRIPTS_DIR}/run_hck_client.sh ${CONFIG_FILE} 2 &
   fi
 else
-  echo
-  dump_config
-  echo
 
   echo Creating bridges...
   create_bridges
