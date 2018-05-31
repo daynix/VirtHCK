@@ -184,10 +184,6 @@ elif  [ "$CI_MODE" = true ] ; then
   if [ x"${RUN_CLIENT2}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
     ${SCRIPTS_DIR}/run_hck_client.sh ${CONFIG_FILE} 2 &
   fi
-elif [ "$END" = true ] ; then
-  remove_bridges
-  remove_bridge_scripts
-  kill_ivshmem_server
 else
   echo
   dump_config
