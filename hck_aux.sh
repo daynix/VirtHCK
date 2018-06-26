@@ -130,47 +130,6 @@ then
    SHARE_ON_HOST="false"
 fi
 
-set_qcow2_l2_cache() {
-    [ "$USE_FULL_QCOW2_L2_CACHE" = true ] || return 0
-    local L2_DEFAULT_CLUSTERS=8
-    local L2_DEFAULT_SIZE=1048576
-    # Format, virtual size, cluster size:
-    set $(${QEMU_IMG_BIN} info $1 |
-          egrep 'file format|virtual size|cluster_size' |
-          sed 's/(//;s/ bytes)//' |
-          awk '{print $NF}')
-    if [ "$1" = qcow2 ]
-    then
-        # size*cache_clusters/cluster_size, but divisible by cluster_size:
-        local L2SIZE=$(( $2 * $L2_DEFAULT_CLUSTERS / $3**2 * $3 ))
-        # Apply only if not smaller than the default
-        [ $L2SIZE -gt $L2_DEFAULT_SIZE ] && printf ",l2-cache-size=%s" $L2SIZE
-    fi
-}
-
-### Same thing without qemu-img:
-#set_qcow2_l2_cache() {
-#    [ "$USE_FULL_QCOW2_L2_CACHE" = true ] || return 0
-#    local L2_DEFAULT_CLUSTERS=8
-#    local L2_DEFAULT_SIZE=1048576
-#    # Info: http://git.qemu.org/?p=qemu.git;a=blob;f=docs/specs/qcow2.txt
-#    set $(od -N 32 --endian=big -An -x $1 2> /dev/null | tr -d " ")
-#    local MAG_VER=$(cut -c 1-16 <<< $1)
-#    case $MAG_VER in
-#    514649fb0000000[2-3])
-#        # File is qcow2
-#        local CLUSTERBITS=$(cut -c 9-16 <<< $2)
-#        local CLUSTERSIZE=$(( 1 << 0x$CLUSTERBITS ))
-#        local DRIVESIZE=$(cut -c 17-32 <<< $2)
-#        # size*cache_clusters/cluster_size, but divisible by cluster_size:
-#        # Info: http://git.qemu.org/?p=qemu.git;a=blob;f=docs/qcow2-cache.txt
-#        local L2SIZE=$(( 0x$DRIVESIZE * $L2_DEFAULT_CLUSTERS /
-#                         $CLUSTERSIZE**2 * $CLUSTERSIZE ))
-#        # Apply only if not smaller than the default
-#        [ $L2SIZE -gt $L2_DEFAULT_SIZE ] && printf ",l2-cache-size=%s" $L2SIZE
-#    esac
-#}
-
 remove_bridges() {
   case $TEST_NET_TYPE in
   bridge)
