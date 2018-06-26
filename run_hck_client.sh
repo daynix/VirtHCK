@@ -209,8 +209,17 @@ prepare_test_image()
   local TEST_IMAGE_SIZE=30G
   local TEST_IMAGE_NAME=`test_image_name ${IMAGE_NUM}`
 
-  test -f ${TEST_IMAGE_NAME} || \
-  { echo Creating test image of ${TEST_IMAGE_SIZE} ${TEST_IMAGE_NAME}...; ${QEMU_IMG_BIN} create -f qcow2 ${TEST_IMAGE_NAME} ${TEST_IMAGE_SIZE}; }
+  if [ ! -f "${TEST_IMAGE_NAME}" ]
+  then
+    if [ -n "${FILESYSTEM_TESTS_IMAGE}" ] && [ -f "${FILESYSTEM_TESTS_IMAGE}" ]
+    then
+      echo Copying base test image of ${FILESYSTEM_TESTS_IMAGE} to ${TEST_IMAGE_NAME}...
+      cp ${FILESYSTEM_TESTS_IMAGE} ${TEST_IMAGE_NAME}
+    else
+      echo Creating test image of ${TEST_IMAGE_SIZE} ${TEST_IMAGE_NAME}...
+      ${QEMU_IMG_BIN} create -f qcow2 ${TEST_IMAGE_NAME} ${TEST_IMAGE_SIZE}
+    fi
+  fi
 }
 
 if [ x"${CLIENT_WORLD_ACCESS}" = xon ]; then
