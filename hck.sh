@@ -112,6 +112,34 @@ case $key in
     echo QEMU_BIN=$2 >> $ARGS_CFG
     shift
     ;;
+    -vhost_state)
+    echo VHOST_STATE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -enlightenments_state)
+    echo ENLIGHTENMENTS_STATE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -s3)
+    echo ENALBE_S3=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -s4)
+    echo ENALBE_S4=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -machine_type)
+    echo MACHINE_TYPE=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -ivshmem_server_bin)
+    echo IVSHMEM_SERVER_BIN=$2 >> $ARGS_CFG
+    shift
+    ;;
+    -filesystem_tests_image)
+    echo FILESYSTEM_TESTS_IMAGE=$2 >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
