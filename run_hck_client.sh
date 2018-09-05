@@ -325,6 +325,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
         ;;
+    viocrypt)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_VIOCRYPT_DEVICE="-object cryptodev-backend-builtin,id=cryptodev0 -device ${TEST_DEV_NAME},id=crypto0,cryptodev=cryptodev0"
+       ;;
 
       * )
        echo "NOT IMPLEMENTED"
@@ -371,6 +375,7 @@ ${QEMU_BIN} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_IVSHMEM_DEVICE} \
         ${TEST_RNG_DEVICE} \
+        ${TEST_VIOCRYPT_DEVICE} \
         ${WORLD_NET_IFACE} \
         ${MACHINE_UUID} \
         -machine ${MACHINE_TYPE} \
