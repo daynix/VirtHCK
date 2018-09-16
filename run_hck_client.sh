@@ -79,6 +79,14 @@ usb_cmd()
     fi
 }
 
+virtionet_speed()
+{
+    if [ ! -z "${VIRTIONET_SPEED}" ]
+    then
+        echo ",speed=${VIRTIONET_SPEED}"
+    fi
+}
+
 extra_params_cmd()
 {
     if [ ! -z "${TEST_DEV_EXTRA_PARAMS}" ]
@@ -256,7 +264,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
           ;;
        esac
        TEST_NET_DEVICES="${TAP_DEVICE}
-                         -device ${TEST_DEV_NAME}`extra_params_cmd`,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=${BUS_NAME}.0$(client_mq_device_param)${TEST_DEVICE_ID}"
+                         -device ${TEST_DEV_NAME}`extra_params_cmd``virtionet_speed`,netdev=hostnet2,mac=${TEST_NET_MAC_ADDRESS},bus=${BUS_NAME}.0$(client_mq_device_param)${TEST_DEVICE_ID}"
        ;;
     bootstorage)
        BOOT_STORAGE_PAIR="-drive file=`image_name`$(set_qcow2_l2_cache `image_name`),if=none,id=vio_block${DRIVE_CACHE_OPTION}
