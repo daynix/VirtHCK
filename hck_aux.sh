@@ -294,7 +294,8 @@ Setup configuration
   Client world access........ ${CLIENT_WORLD_ACCESS_NOTIFY}
   Client 1 VCPUs............. ${CLIENT1_CPUS}
   Client 2 VCPUs............. ${CLIENT2_CPUS}
-  Memory for each client..... ${CLIENT_MEMORY}
+  Client 1 Memory............ ${CLIENT1_MEMORY}
+  Client 2 Memory............ ${CLIENT2_MEMORY}
   World network device....... ${WORLD_NET_DEVICE}
   Control network device..... ${CTRL_NET_DEVICE}
   VHOST...................... ${VHOST_STATE}
