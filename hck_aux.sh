@@ -265,6 +265,20 @@ delete_macvtap() {
   ip link del macvtap-$1
 }
 
+dump_client() {
+  ports=CLIENT$1_PORTS_MSG
+  image=CLIENT$1_IMAGE
+  cpus=CLIENT$1_CPUS
+  memory=CLIENT$1_MEMORY
+
+cat <<END
+  Client ${1} display port...... `echo ${!ports}`
+  Client ${1} VM Image.......... `echo ${!image}`
+  Client ${1} VCPUs............. `echo ${!cpus}`
+  Client ${1} Memory............ `echo ${!memory}`
+END
+}
+
 dump_config()
 {
     if [ ! -z  "${TEST_DEV_EXTRA_PARAMS}" ]
@@ -284,18 +298,10 @@ Setup configuration
   Graphics................... ${VIDEO_TYPE}
   Test network backend....... ${TEST_NET_TYPE}
   Studio VM display port..... Vnc ${STUDIO_PORT}/$(( ${STUDIO_PORT} + 5900 )) Telnet ${STUDIO_TELNET_PORT}
-  Client 1 display port...... ${CLIENT1_PORTS_MSG}
-  Client 2 display port...... ${CLIENT2_PORTS_MSG}
   QEMU binary................ ${QEMU_BIN}
   Studio VM image............ ${STUDIO_IMAGE}
-  Client 1 VM Image.......... ${CLIENT1_IMAGE}
-  Client 2 VM Image.......... ${CLIENT2_IMAGE}
   SMB share on host.......... ${SHARE_ON_HOST}
   Client world access........ ${CLIENT_WORLD_ACCESS_NOTIFY}
-  Client 1 VCPUs............. ${CLIENT1_CPUS}
-  Client 2 VCPUs............. ${CLIENT2_CPUS}
-  Client 1 Memory............ ${CLIENT1_MEMORY}
-  Client 2 Memory............ ${CLIENT2_MEMORY}
   World network device....... ${WORLD_NET_DEVICE}
   Control network device..... ${CTRL_NET_DEVICE}
   VHOST...................... ${VHOST_STATE}
@@ -304,6 +310,9 @@ Setup configuration
   S4 enabled..................${ENABLE_S4}
   Snapshot mode.............. ${SNAPSHOT}
 END
+
+  if [ $RUN_CLIENT1 ] ; then dump_client "1" ; fi
+  if [ $RUN_CLIENT2 ] ; then dump_client "2" ; fi
 }
 
 LOOPRUN_FILE=${HCK_ROOT}"/.hck_stop_looped_vms_${UNIQUE_ID}.flag"
