@@ -387,11 +387,11 @@ ${QEMU_BIN} \
         ${WORLD_NET_IFACE} \
         ${MACHINE_UUID} \
         -machine ${MACHINE_TYPE} \
-        -nodefaults -nodefconfig \
+        -nodefaults -no-user-config \
         -m `client_memory` -smp `client_cpus`,cores=`client_cpus` -enable-kvm \
         -cpu qemu64,+x2apic,+fsgsbase${OPT_CPU_FLAGS},model=${VCPU_MODEL}${ENLIGHTENMENTS_OPTION} \
         -usb -device usb-tablet -boot ${BOOT_ORDER} \
-        -rtc-td-hack -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
+        -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
         `cdrom_cmd` `bios_cmd` \
