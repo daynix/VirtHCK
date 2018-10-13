@@ -244,7 +244,10 @@ enslave_test_iface() {
      ;;
   esac
 
+if [ -d "$TAP_TX_OFF" ] && [ "$TAP_TX_OFF" == "yes" ]
+then
   ethtool -K ${IFNAME} tx off
+fi
   ifconfig ${IFNAME} txqueuelen $(queue_len_tx $CLIENT1_N_QUEUES $CLIENT1_N_QUEUES)
 }
 
