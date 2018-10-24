@@ -121,11 +121,11 @@ case $key in
     shift
     ;;
     -s3)
-    echo ENALBE_S3=$2 >> $ARGS_CFG
+    echo ENABLE_S3=$2 >> $ARGS_CFG
     shift
     ;;
     -s4)
-    echo ENALBE_S4=$2 >> $ARGS_CFG
+    echo ENABLE_S4=$2 >> $ARGS_CFG
     shift
     ;;
     -machine_type)
