@@ -1,7 +1,8 @@
-Place the two files on the targeted client machine and run
-the .bat file using the "Run as administrator"!
+Place "auto_partition.bat" in the desired machine and
+run the script as administrator with the number of the
+desired disk as an argument.
 
-This script creates partitions on disk 1 as required by
+This script creates partitions on the desired disk as required by
 https://msdn.microsoft.com/en-us/library/windows/hardware/jj125194(v=vs.85).aspx
 
 NOTE: its important to run the script as administrator.
