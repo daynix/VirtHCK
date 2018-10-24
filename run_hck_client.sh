@@ -44,7 +44,7 @@ client_test_mac()
 {
   DEVICE_NUM=$1
 
-  echo 56:${UID_FIRST}:${UID_SECOND}:0${CLIENT_NUM}:0${DEVICE_NUM}:cc
+  echo 56:${UID_FIRST}:${UID_SECOND}:0${CLIENT_NUM}:0${DEVICE_NUM}:c${CLIENT_NUM}
 }
 
 client_cpus()
