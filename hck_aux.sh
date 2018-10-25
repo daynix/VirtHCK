@@ -359,3 +359,13 @@ kill_ivshmem_server() {
     sudo kill ${cat ${IVSHMEM_PID}}
   fi
 }
+
+disable_bridge_nf() {
+  if [ "$DISABLE_BRIDGE_NF" = "on" ]
+  then
+    echo Disabling bridge-netfilter...
+    sysctl net.bridge.bridge-nf-call-arptables=0 > /dev/null
+    sysctl net.bridge.bridge-nf-call-ip6tables=0 > /dev/null
+    sysctl net.bridge.bridge-nf-call-iptables=0 > /dev/null
+  fi
+}
