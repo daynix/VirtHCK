@@ -232,6 +232,8 @@ elif  [ "$CI_MODE" = true ] ; then
   fi
 else
 
+  disable_bridge_nf
+
   echo Creating bridges...
   create_bridges
 
