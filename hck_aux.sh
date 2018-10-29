@@ -244,7 +244,7 @@ enslave_test_iface() {
      ;;
   esac
 
-if [ -d "$TAP_TX_OFF" ] && [ "$TAP_TX_OFF" == "yes" ]
+if [ -d "$TAP_TX_OFF" ] && [ "$TAP_TX_OFF" == "on" ]
 then
   ethtool -K ${IFNAME} tx off
 fi
