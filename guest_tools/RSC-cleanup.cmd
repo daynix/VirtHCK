@@ -21,7 +21,7 @@ net session > nul
 if errorlevel 1 goto noadmin
 for /f "tokens=4 usebackq" %%a in (`pnputil -e ^| findstr /i .inf`) do call :one_inf %%a
 timeout 20
-goto :eof
+exit /b 0
 
 :one_inf
 echo checking %windir%\inf\%1
@@ -45,5 +45,5 @@ goto :eof
 
 :noadmin
 echo Run this batch as an administrator!
-pause
-goto :eof
+timeout 10
+exit /b 1
