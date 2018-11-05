@@ -220,6 +220,7 @@ if [ "$END" = true ] ; then
 elif  [ "$CI_MODE" = true ] ; then
   if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
     echo Creating bridges...
+    disable_bridge_nf
     create_bridges
     run_ivshmem_server
     ${SCRIPTS_DIR}/run_hck_studio.sh ${CONFIG_FILE} &
