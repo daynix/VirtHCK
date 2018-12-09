@@ -314,8 +314,8 @@ Setup configuration
   Snapshot mode.............. ${SNAPSHOT}
 END
 
-  if [ $RUN_CLIENT1 ] ; then dump_client "1" ; fi
-  if [ $RUN_CLIENT2 ] ; then dump_client "2" ; fi
+  if [ $RUN_CLIENT1 ] || [ $RUN_ALL ] ; then dump_client "1" ; fi
+  if [ $RUN_CLIENT2 ] || [ $RUN_ALL ] ; then dump_client "2" ; fi
 }
 
 LOOPRUN_FILE=${HCK_ROOT}"/.hck_stop_looped_vms_${UNIQUE_ID}.flag"
