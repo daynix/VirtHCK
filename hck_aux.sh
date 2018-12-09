@@ -300,7 +300,6 @@ Setup configuration
   Test device extra config... ${EXTRA_PARAMS}
   Graphics................... ${VIDEO_TYPE}
   Test network backend....... ${TEST_NET_TYPE}
-  Studio VM display port..... Vnc ${STUDIO_PORT}/$(( ${STUDIO_PORT} + 5900 )) Telnet ${STUDIO_TELNET_PORT}
   QEMU binary................ ${QEMU_BIN}
   Studio VM image............ ${STUDIO_IMAGE}
   SMB share on host.......... ${SHARE_ON_HOST}
@@ -312,6 +311,7 @@ Setup configuration
   S3 enabled..................${ENABLE_S3}
   S4 enabled..................${ENABLE_S4}
   Snapshot mode.............. ${SNAPSHOT}
+  Studio VM display port..... Vnc ${STUDIO_PORT}/$(( ${STUDIO_PORT} + 5900 )) Telnet ${STUDIO_TELNET_PORT}
 END
 
   if [ $RUN_CLIENT1 ] || [ $RUN_ALL ] ; then dump_client "1" ; fi
