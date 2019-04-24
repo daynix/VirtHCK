@@ -140,6 +140,10 @@ case $key in
     echo FILESYSTEM_TESTS_IMAGE=$2 >> $ARGS_CFG
     shift
     ;;
+    -pidfile)
+    echo PID_FILE=$2 >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
