@@ -37,6 +37,15 @@ if [ "${DISABLE_UUIDS}" != "true" ]; then
 STUDIO_UUID="-uuid ${UNIQUE_ID}127c-8795-4e67-95da-8dd0a8891cd1"
 fi
 
+pid_file()
+{
+    if [ ! -z "${PID_FILE}" ]
+    then
+        echo "-pidfile ${PID_FILE}"
+    fi
+}
+
+
 ${QEMU_BIN} \
     ${QEMU_RUN_AS} \
     -drive file=${STUDIO_IMAGE}$(set_qcow2_l2_cache ${STUDIO_IMAGE}),if=none,id=ide_${UNIQUE_ID}${DRIVE_CACHE_OPTION} \
@@ -48,6 +57,6 @@ ${QEMU_BIN} \
     -cpu qemu64,+x2apic,+fsgsbase${OPT_CPU_FLAGS} \
     ${STUDIO_UUID} \
     -name HCK-Studio_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
-    -rtc base=localtime \
+    -rtc base=localtime `pid_file` \
     ${GRAPHICS_STUDIO} ${MONITOR_STUDIO} ${SNAPSHOT_OPTION} ${STUDIO_EXTRA}
 

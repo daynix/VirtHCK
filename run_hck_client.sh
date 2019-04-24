@@ -182,6 +182,14 @@ log_cmd()
     fi
 }
 
+pid_file()
+{
+    if [ ! -z "${PID_FILE}" ]
+    then
+        echo "-pidfile ${PID_FILE}"
+    fi
+}
+
 #Machine type related difference
 case $MACHINE_TYPE in
     q35 )
@@ -394,7 +402,7 @@ ${QEMU_BIN} \
         -global kvm-pit.lost_tick_policy=discard -rtc base=localtime,clock=host,driftfix=slew \
         -global ${DISABLE_S3_PARAM}=${S3_DISABLE_OPTION} -global ${DISABLE_S4_PARAM}=${S4_DISABLE_OPTION} \
         -name HCK-Client${CLIENT_NUM}_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
-        `cdrom_cmd` `bios_cmd` \
+        `cdrom_cmd` `bios_cmd` `pid_file` \
         `graphics_cmd` `monitor_cmd` ${SNAPSHOT_OPTION} `usb_cmd` `extra_cmd` \
         `trace_cmd` \
          2>&1 | `log_cmd`
