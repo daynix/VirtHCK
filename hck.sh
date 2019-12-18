@@ -11,6 +11,7 @@
 # This code is licensed under standard 3-clause BSD license.
 # See file LICENSE supplied with this package for the full license text.
 
+VERSION=0.1.1
 VM_START_TIMEOUT=10
 ARGS_CFG=args.cfg
 
@@ -29,6 +30,12 @@ then
   echo The default configuration file is \"hck_setup.cfg\" in the same directory
   echo that the script is run from. A different file can be specified using the
   echo \"-c\" option.
+  exit
+fi
+
+if [ "$1" = "-v" ] || [ "$1" = "--version" ]
+then
+  echo VirtHCK Version: $VERSION
   exit
 fi
 
