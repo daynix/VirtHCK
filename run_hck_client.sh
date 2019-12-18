@@ -319,7 +319,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     vsock)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_VSOCK_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=vhost-vsock-pci0,guest-cid=3,bus=${BUS_NAME}.0,addr=0x10"
+       TEST_VSOCK_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=vhost-vsock-pci0,guest-cid=${CLIENT_NUM}0${UNIQUE_ID},bus=${BUS_NAME}.0,addr=0x10"
        ;;
     usb|usb3)
        if [ "$TEST_DEV_TYPE" = "usb" ]; then
