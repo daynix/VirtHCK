@@ -317,6 +317,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x9"
        ;;
+    vsock)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_VSOCK_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=vhost-vsock-pci0,guest-cid=${CLIENT_NUM}0${UNIQUE_ID},bus=${BUS_NAME}.0,addr=0x10"
+       ;;
     usb|usb3)
        if [ "$TEST_DEV_TYPE" = "usb" ]; then
 	       usbkind=usb-ehci
@@ -391,6 +395,7 @@ ${QEMU_BIN} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_IVSHMEM_DEVICE} \
         ${TEST_RNG_DEVICE} \
+        ${TEST_VSOCK_DEVICE} \
         ${TEST_VIOCRYPT_DEVICE} \
         ${WORLD_NET_IFACE} \
         ${MACHINE_UUID} \
