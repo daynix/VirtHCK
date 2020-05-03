@@ -342,6 +342,13 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_IVSHMEM_DEVICE="-chardev socket,path=${IVSHMEM_SOCKET},id=ivshmemid -device ${TEST_DEV_NAME}`extra_params_cmd`,chardev=ivshmemid"
        ;;
+    virtfs)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_VIRTFS_DEVICE="
+         -chardev socket,id=virtfsid,path=${FS_DEAMON_SOCKET}${CLIENT_NUM}
+         -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem
+         -device ${TEST_DEV_NAME}`extra_params_cmd`,queue-size=1024,chardev=virtfsid,tag=myfs"
+       ;;
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
         ;;
@@ -394,6 +401,7 @@ ${QEMU_BIN} \
         ${TEST_SERIAL_DEVICES} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_IVSHMEM_DEVICE} \
+        ${TEST_VIRTFS_DEVICE} \
         ${TEST_RNG_DEVICE} \
         ${TEST_VSOCK_DEVICE} \
         ${TEST_VIOCRYPT_DEVICE} \
