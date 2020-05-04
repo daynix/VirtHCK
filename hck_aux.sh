@@ -361,25 +361,14 @@ kill_ivshmem_server() {
 }
 
 FS_DEAMON_SOCKET=/tmp/vhostqemu_${UNIQUE_ID}
-FS_DEAMON_PID=/tmp/vhostqemu_${UNIQUE_ID}.pid
 
 run_fs_deamon() {
   if [ "${TEST_DEV_TYPE}" = "virtfs" ]; then
     echo Running Virtiofs deamon ...
     sudo rm -f /tmp/vhostqemu_${UNIQUE_ID}
     ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}1 -o source=/tmp/shared -o cache=always&
-    echo $! > /tmp/vhostqemu_${UNIQUE_ID}.pid.1
     ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}2 -o source=/tmp/shared -o cache=always&
-    echo $! > /tmp/vhostqemu_${UNIQUE_ID}.pid.2
   fi
-}
-
-kill_fs_deamon(){
-  if [ "${TEST_DEV_TYPE}" = "virtfs" ]; then
-     echo Stopping Virtiofs deamon...
-     sudo kill ${cat ${FS_DEAMON_PID}.1}
-     sudo kill ${cat ${FS_DEAMON_PID}.2}
-   fi
 }
 
 run_support_servers(){
@@ -389,7 +378,6 @@ run_support_servers(){
 
 kill_support_servers(){
   kill_ivshmem_server
-  kill_fs_deamon
 }
 
 disable_bridge_nf() {
