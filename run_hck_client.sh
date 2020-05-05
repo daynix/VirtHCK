@@ -219,6 +219,15 @@ test_image_name()
   echo $(dirname `image_name`)/client${CLIENT_NUM}_test_image${IMAGE_NUM}.qcow2
 }
 
+run_virtiofs_deamon()
+{
+  FS_DEAMON_SOCKET=/tmp/vhostqemu_${UNIQUE_ID}
+  echo Running virtiofsdeamon...
+  sudo rm -f /tmp/vhostqemu_${UNIQUE_ID}${CLIENT_NUM}
+  ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}${CLIENT_NUM} -o source=/tmp/shared -o cache=always -d &
+
+}
+
 prepare_test_image()
 {
   local IMAGE_NUM=$1
@@ -342,6 +351,14 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_IVSHMEM_DEVICE="-chardev socket,path=${IVSHMEM_SOCKET},id=ivshmemid -device ${TEST_DEV_NAME}`extra_params_cmd`,chardev=ivshmemid"
        ;;
+    viofs)
+       run_virtiofs_deamon
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_VIRTFS_DEVICE="
+         -chardev socket,id=virtiofsid,path=${FS_DEAMON_SOCKET}${CLIENT_NUM}
+         -object memory-backend-file,id=mem,size=`client_memory`,mem-path=/dev/shm,share=on -numa node,memdev=mem
+         -device ${TEST_DEV_NAME}`extra_params_cmd`,queue-size=1024,chardev=virtiofsid,tag=myfs"
+       ;;
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
         ;;
@@ -394,6 +411,7 @@ ${QEMU_BIN} \
         ${TEST_SERIAL_DEVICES} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_IVSHMEM_DEVICE} \
+        ${TEST_VIRTFS_DEVICE} \
         ${TEST_RNG_DEVICE} \
         ${TEST_VSOCK_DEVICE} \
         ${TEST_VIOCRYPT_DEVICE} \
