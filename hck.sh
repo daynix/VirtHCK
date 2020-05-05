@@ -143,6 +143,10 @@ case $key in
     echo IVSHMEM_SERVER_BIN=$2 >> $ARGS_CFG
     shift
     ;;
+    -fs_deamon_bin)
+    echo FS_DEAMON_BIN=$2 >> $ARGS_CFG
+    shift
+    ;;
     -filesystem_tests_image)
     echo FILESYSTEM_TESTS_IMAGE=$2 >> $ARGS_CFG
     shift
