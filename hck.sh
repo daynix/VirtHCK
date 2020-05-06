@@ -143,10 +143,6 @@ case $key in
     echo IVSHMEM_SERVER_BIN=$2 >> $ARGS_CFG
     shift
     ;;
-    -fs_deamon_bin)
-    echo FS_DEAMON_BIN=$2 >> $ARGS_CFG
-    shift
-    ;;
     -filesystem_tests_image)
     echo FILESYSTEM_TESTS_IMAGE=$2 >> $ARGS_CFG
     shift
@@ -231,14 +227,13 @@ fi
 if [ "$END" = true ] ; then
   remove_bridges
   remove_bridge_scripts
-  kill_support_servers
+  kill_ivshmem_server
 elif  [ "$CI_MODE" = true ] ; then
   if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
     echo Creating bridges...
     disable_bridge_nf
     create_bridges
-    run_support_servers
-    run_fs_deamon
+    run_ivshmem_server
     ${SCRIPTS_DIR}/run_hck_studio.sh ${CONFIG_FILE} &
   fi
   if [ x"${RUN_CLIENT1}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
@@ -254,7 +249,7 @@ else
   echo Creating bridges...
   create_bridges
 
-  run_support_servers
+  run_ivshmem_server
 
   loop_run_reset
   if [ x"${RUN_STUDIO}" = xtrue ] || [ x"${RUN_ALL}" = xtrue ]; then
@@ -279,6 +274,6 @@ else
   remove_bridges
   remove_bridge_scripts
   loop_run_reset
-  kill_support_servers
+  kill_ivshmem_server
 fi
 
