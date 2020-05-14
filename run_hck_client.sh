@@ -224,7 +224,7 @@ run_virtiofs_deamon()
   FS_DEAMON_SOCKET=/tmp/vhostqemu_${UNIQUE_ID}
   echo Running virtiofsdeamon...
   sudo rm -f /tmp/vhostqemu_${UNIQUE_ID}${CLIENT_NUM}
-  ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}${CLIENT_NUM} -o source=/tmp/shared -o cache=always -d &
+  ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}${CLIENT_NUM} -o source=/tmp/shared -o cache=always --daemonize
 
 }
 
