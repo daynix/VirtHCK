@@ -199,7 +199,7 @@ case $MACHINE_TYPE in
         DISABLE_S4_PARAM=ICH9-LPC.disable_s4
         #Windows 2012R2 crashes during boot on Q35 machine with UUID set
         MACHINE_UUID=""
-        Q35_IOH_DEVICE="-device ioh3420,bus=pcie.0,id=root1.0,slot=1"
+        PCIE_ROOT_PORT="-device pcie-root-port,slot=3,chassis=1,addr=0x3,bus=pcie.0,id=root1.0"
         ;;
     * )
         BUS_NAME=pci
@@ -405,7 +405,7 @@ ${QEMU_BIN} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
         ${CTRL_NET_DEVICE} \
-        ${Q35_IOH_DEVICE} \
+        ${PCIE_ROOT_PORT} \
         ${TEST_NET_DEVICES} \
         ${FILE_TRANSFER_SETUP} \
         ${TEST_SERIAL_DEVICES} \
