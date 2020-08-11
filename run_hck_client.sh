@@ -91,7 +91,11 @@ extra_params_cmd()
 {
     if [ ! -z "${TEST_DEV_EXTRA_PARAMS}" ]
     then
-        echo ",${TEST_DEV_EXTRA_PARAMS}"
+        echo -n ",${TEST_DEV_EXTRA_PARAMS}"
+    fi
+    if [ "$vIOMMU" ==  "on" ]
+    then
+        echo ",iommu_platform=on,ats=on"
     fi
 }
 
@@ -416,8 +420,9 @@ ${QEMU_BIN} \
         ${TEST_VSOCK_DEVICE} \
         ${TEST_VIOCRYPT_DEVICE} \
         ${WORLD_NET_IFACE} \
+        ${IOMMU_DEVICE} \
         ${MACHINE_UUID} \
-        -machine ${MACHINE_TYPE} \
+        -machine ${MACHINE_TYPE}${MACHINE_TYPE_EXTRAS} \
         -nodefaults -no-user-config \
         -m `client_memory` -smp `client_cpus`,cores=`client_cpus` -enable-kvm \
         -cpu qemu64,+x2apic,+fsgsbase${OPT_CPU_FLAGS},model=${VCPU_MODEL}${ENLIGHTENMENTS_OPTION} \

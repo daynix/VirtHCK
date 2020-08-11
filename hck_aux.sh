@@ -49,8 +49,10 @@ CLIENT2_IMAGE=`readlink -f $CLIENT2_IMAGE`
 
 test x"${SNAPSHOT}" = xon && SNAPSHOT_OPTION="-snapshot"
 test x"${UNSAFE_CACHE}" = xon && DRIVE_CACHE_OPTION=",cache=unsafe"
-test x"${ENLIGHTENMENTS_STATE}" = xon && ENLIGHTENMENTS_OPTION=,hv_spinlocks=0x1FFF,hv_relaxed
+test x"${ENLIGHTENMENTS_STATE}" = xon && ENLIGHTENMENTS_OPTION=,hv_spinlocks=0x1FFF,hv_relaxed,hv_vapic,hv_time
 test x"${CLIENT_WORLD_ACCESS}" = xon && CLIENT_WORLD_ACCESS_NOTIFY="ENABLED!!!" || CLIENT_WORLD_ACCESS_NOTIFY="disabled"
+test x"${vIOMMU}" = xon && MACHINE_TYPE_EXTRAS=",accel=kvm,vmport=off,smm=on,kernel-irqchip=split" \
+                        && IOMMU_DEVICE="-device intel-iommu,intremap=on,aw-bits=48,caching-mode=on,device-iotlb=on"
 
 if [ z${ENABLE_S3} =  zon ]
 then
