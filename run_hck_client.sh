@@ -289,19 +289,19 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     bootstorage)
        BOOT_STORAGE_PAIR="-drive file=`image_name`$(set_qcow2_l2_cache `image_name`),if=none,id=vio_block${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=vio_block,serial=${CLIENT_NUM}1${UNIQUE_ID}"
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,drive=vio_block,serial=${CLIENT_NUM}1${UNIQUE_ID}"
        ;;
     storage-blk)
        prepare_test_image 1
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=`test_image_name 1`$(set_qcow2_l2_cache `test_image_name 1`),if=none,format=qcow2,id=virtio_blk${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x5,drive=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}"
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME},drive=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        ;;
     storage-scsi)
        prepare_test_image 1
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=`test_image_name 1`$(set_qcow2_l2_cache `test_image_name 1`),if=none,format=qcow2,id=virtio_scsi${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0,addr=0x5
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,id=scsi,bus=${BUS_NAME}.0
                           -device scsi-hd,drive=virtio_scsi,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        ;;
     fs-filter)
@@ -312,11 +312,11 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     serial)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=virtio_serial_pci0,addr=0x07"
+       TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=virtio_serial_pci0"
        ;;
     balloon)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x8"
+       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0"
        ;;
     pvpanic)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -328,11 +328,11 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     rng)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,addr=0x9"
+       TEST_RNG_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0"
        ;;
     vsock)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_VSOCK_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=vhost-vsock-pci0,guest-cid=${CLIENT_NUM}0${UNIQUE_ID},bus=${BUS_NAME}.0,addr=0x10"
+       TEST_VSOCK_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=vhost-vsock-pci0,guest-cid=${CLIENT_NUM}0${UNIQUE_ID},bus=${BUS_NAME}.0"
        ;;
     usb|usb3)
        if [ "$TEST_DEV_TYPE" = "usb" ]; then
