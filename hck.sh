@@ -155,6 +155,10 @@ case $key in
     echo PID_FILE=$2 >> $ARGS_CFG
     shift
     ;;
+    -viommu)
+    echo vIOMMU=$2 >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
