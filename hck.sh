@@ -11,7 +11,7 @@
 # This code is licensed under standard 3-clause BSD license.
 # See file LICENSE supplied with this package for the full license text.
 
-VERSION=0.1.1
+VERSION=0.1.2
 VM_START_TIMEOUT=10
 ARGS_CFG=args.cfg
 
