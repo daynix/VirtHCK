@@ -295,7 +295,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        prepare_test_image 1
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_STORAGE_PAIR="-drive file=`test_image_name 1`$(set_qcow2_l2_cache `test_image_name 1`),if=none,format=qcow2,id=virtio_blk${DRIVE_CACHE_OPTION}
-                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME},drive=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}"
+                          -device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,drive=virtio_blk,serial=${CLIENT_NUM}0${UNIQUE_ID}"
        ;;
     storage-scsi)
        prepare_test_image 1
@@ -312,7 +312,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     serial)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}`extra_params_cmd`,id=virtio_serial_pci0"
+       TEST_SERIAL_DEVICES="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0,id=virtio_serial_pci0"
        ;;
     balloon)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -324,7 +324,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        ;;
     vioinput)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
-       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`"
+       TEST_BALLOON_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,bus=${BUS_NAME}.0"
        ;;
     rng)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -361,7 +361,7 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        TEST_VIRTFS_DEVICE="
          -chardev socket,id=virtiofsid,path=${FS_DEAMON_SOCKET}${CLIENT_NUM}
          -object memory-backend-file,id=mem,size=`client_memory`,mem-path=/dev/shm,share=on -numa node,memdev=mem
-         -device ${TEST_DEV_NAME}`extra_params_cmd`,queue-size=1024,chardev=virtiofsid,tag=myfs"
+         -device ${TEST_DEV_NAME}`extra_params_cmd`,queue-size=1024,chardev=virtiofsid,tag=myfs,bus=${BUS_NAME}.0"
        ;;
     video)
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
@@ -406,10 +406,10 @@ CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup
 
 ${QEMU_BIN} \
         ${QEMU_RUN_AS} \
+        ${PCIE_ROOT_PORT} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
         ${CTRL_NET_DEVICE} \
-        ${PCIE_ROOT_PORT} \
         ${TEST_NET_DEVICES} \
         ${FILE_TRANSFER_SETUP} \
         ${TEST_SERIAL_DEVICES} \
