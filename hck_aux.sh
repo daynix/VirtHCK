@@ -358,7 +358,7 @@ run_ivshmem_server() {
 kill_ivshmem_server() {
   if [ "${TEST_DEV_TYPE}" = "ivshmem" ]; then
     echo stopping ivshmem server...
-    sudo kill ${cat ${IVSHMEM_PID}}
+    sudo kill $(cat ${IVSHMEM_PID})
   fi
 }
 
