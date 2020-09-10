@@ -203,7 +203,7 @@ case $MACHINE_TYPE in
         DISABLE_S4_PARAM=ICH9-LPC.disable_s4
         #Windows 2012R2 crashes during boot on Q35 machine with UUID set
         MACHINE_UUID=""
-        PCIE_ROOT_PORT="-device pcie-root-port,slot=3,chassis=1,addr=0x3,bus=pcie.0,id=root1.0"
+        PCIE_ROOT_PORT="-device pcie-root-port,slot=3,chassis=1,addr=0x4,bus=pcie.0,id=root1.0"
         ;;
     * )
         BUS_NAME=pci
@@ -402,14 +402,14 @@ if [ ${SHARE_ON_HOST} != "false" ] && [ -e "${SHARE_ON_HOST}/USE_SHARE" ]; then
 fi
 
 CTRL_NET_DEVICE="-netdev tap,id=hostnet0,script=${HCK_ROOT}/hck_ctrl_bridge_ifup_${UNIQUE_ID}.sh,downscript=no,ifname=`client_ctrl_ifname`
-                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,bus=${CTRL_BUS_NAME}.0,id=`client_ctrl_ifname`"
+                 -device ${CTRL_NET_DEVICE},netdev=hostnet0,mac=`client_ctrl_mac`,addr=03,bus=${CTRL_BUS_NAME}.0,id=`client_ctrl_ifname`"
 
 ${QEMU_BIN} \
         ${QEMU_RUN_AS} \
+        ${CTRL_NET_DEVICE} \
         ${PCIE_ROOT_PORT} \
         ${BOOT_STORAGE_PAIR} \
         ${TEST_STORAGE_PAIR} \
-        ${CTRL_NET_DEVICE} \
         ${TEST_NET_DEVICES} \
         ${FILE_TRANSFER_SETUP} \
         ${TEST_SERIAL_DEVICES} \
