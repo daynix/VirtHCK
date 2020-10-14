@@ -147,6 +147,10 @@ case $key in
     echo FS_DEAMON_BIN=$2 >> $ARGS_CFG
     shift
     ;;
+    -fs_deamon_shared_dir)
+    echo VIOFSD_SHARE=$2 >> $ARGS_CFG
+    shift
+    ;;
     -filesystem_tests_image)
     echo FILESYSTEM_TESTS_IMAGE=$2 >> $ARGS_CFG
     shift
