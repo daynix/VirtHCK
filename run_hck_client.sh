@@ -226,6 +226,7 @@ test_image_name()
 run_virtiofs_deamon()
 {
   FS_DEAMON_SOCKET=/tmp/vhostqemu_${UNIQUE_ID}
+  mkdir -p ${VIOFSD_SHARE}
   echo Running virtiofsdeamon...
   sudo rm -f /tmp/vhostqemu_${UNIQUE_ID}${CLIENT_NUM}
   ${FS_DEAMON_BIN} --socket-path=${FS_DEAMON_SOCKET}${CLIENT_NUM} -o source=${VIOFSD_SHARE} -o cache=always --daemonize
