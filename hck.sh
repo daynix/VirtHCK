@@ -163,6 +163,18 @@ case $key in
     echo vIOMMU=$2 >> $ARGS_CFG
     shift
     ;;
+    -st_extra)
+    echo "STUDIO_EXTRA='$2'" >> $ARGS_CFG
+    shift
+    ;;
+    -c1_extra)
+    echo "CLIENT1_EXTRA='$2'" >> $ARGS_CFG
+    shift
+    ;;
+    -c2_extra)
+    echo "CLIENT2_EXTRA='$2'" >> $ARGS_CFG
+    shift
+    ;;
     st)
     RUN_STUDIO=true
     ;;
