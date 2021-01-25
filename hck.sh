@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (c) 2013, Daynix Computing LTD (www.daynix.com)
 # All rights reserved.
@@ -215,7 +215,7 @@ kill_jobs() {
 make_bridge_script() {
 SCRIPTFILE="${HCK_ROOT}"/$1
 cat <<EOF > ${SCRIPTFILE}
-#!/bin/sh
+#!/bin/bash
 . ${CONFIG_FILE}
 $2 $3 \$1
 EOF

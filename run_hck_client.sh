@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (c) 2013, Daynix Computing LTD (www.daynix.com)
 # All rights reserved.
