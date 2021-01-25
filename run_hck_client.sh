@@ -93,7 +93,7 @@ extra_params_cmd()
     then
         echo -n ",${TEST_DEV_EXTRA_PARAMS}"
     fi
-    if [ "$vIOMMU" ==  "on" ]
+    if [ "$vIOMMU" = "on" ]
     then
         echo ",iommu_platform=on,ats=on"
     fi
