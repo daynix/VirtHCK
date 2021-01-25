@@ -59,4 +59,3 @@ ${QEMU_BIN} \
     -name HCK-Studio_${UNIQUE_ID}_`hostname`_${TITLE_POSTFIX} \
     -rtc base=localtime `pid_file` \
     ${GRAPHICS_STUDIO} ${MONITOR_STUDIO} ${SNAPSHOT_OPTION} ${STUDIO_EXTRA}
-
