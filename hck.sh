@@ -288,4 +288,3 @@ else
   loop_run_reset
   kill_ivshmem_server
 fi
-
