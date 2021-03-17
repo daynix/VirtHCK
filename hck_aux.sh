@@ -79,11 +79,15 @@ MONITOR_CLIENT2="-monitor telnet::${CLIENT2_TELNET_PORT},server,nowait"
 if [ z${VIDEO_TYPE} =  zVNC ]
 then
     GRAPHICS_STUDIO="-vnc :${STUDIO_PORT}"
-
-    GRAPHICS_CLIENT1="-vga cirrus -vnc :${CLIENT1_PORT}"
+    if [ ${TEST_DEV_TYPE} = viogpu ]
+    then
+        GRAPHICS_CLIENT1="-vnc :${CLIENT1_PORT}"
+        GRAPHICS_CLIENT2="-vnc :${CLIENT2_PORT}"
+    else
+        GRAPHICS_CLIENT1="-vga cirrus -vnc :${CLIENT1_PORT}"
+        GRAPHICS_CLIENT2="-vga cirrus -vnc :${CLIENT2_PORT}"
+    fi
     CLIENT1_PORTS_MSG="Vnc ${CLIENT1_PORT}/$(( ${CLIENT1_PORT} + 5900 )) Telnet ${CLIENT1_TELNET_PORT}"
-
-    GRAPHICS_CLIENT2="-vga cirrus -vnc :${CLIENT2_PORT}"
     CLIENT2_PORTS_MSG="Vnc ${CLIENT2_PORT}/$(( ${CLIENT2_PORT} + 5900 )) Telnet ${CLIENT2_TELNET_PORT}"
 
     MONITOR_STDIO="${MONITOR_STDIO} -monitor vc"

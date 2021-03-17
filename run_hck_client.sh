@@ -370,6 +370,10 @@ if [ "$IS_PHYSICAL" = "false" ]; then    # in case of a virtual device
        BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
        TEST_VIOCRYPT_DEVICE="-object cryptodev-backend-builtin,id=cryptodev0 -device ${TEST_DEV_NAME},id=crypto0,cryptodev=cryptodev0"
        ;;
+    viogpu)
+       BOOT_STORAGE_PAIR="${IDE_STORAGE_PAIR}"
+       TEST_VIOGPU_DEVICE="-device ${TEST_DEV_NAME}`extra_params_cmd`,edid=off,bus=${BUS_NAME}.0"
+       ;;
 
       * )
        echo "NOT IMPLEMENTED"
@@ -412,6 +416,7 @@ ${QEMU_BIN} \
         ${TEST_STORAGE_PAIR} \
         ${TEST_NET_DEVICES} \
         ${FILE_TRANSFER_SETUP} \
+        ${TEST_VIOGPU_DEVICE} \
         ${TEST_SERIAL_DEVICES} \
         ${TEST_BALLOON_DEVICE} \
         ${TEST_IVSHMEM_DEVICE} \
